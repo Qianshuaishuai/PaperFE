@@ -1,0 +1,115 @@
+.correction {
+  border: 1px solid #2d9fff;
+  margin: -1px;
+  cursor: default;
+  padding: 10px 20px;
+}
+
+.error_reason {
+  color: #333;
+  font-size: 14px;
+}
+
+.error_reason::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 8px solid #ffbd55;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  margin-right: 13px;
+}
+
+.error_choice {
+  margin: 12px 0 12px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.error_choice > span {
+  color: #2d9fff;
+  display: block;
+  width: 15%;
+  text-align: center;
+  height: 2em;
+  line-height: 2em;
+  border: 1px solid #2d9fff;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.choiceActive {
+  background: #2d9fff;
+  color: #fff !important;
+}
+
+.widget {
+  border: 1px solid #eaeaea;
+  color: #999;
+  margin-left: 20px;
+}
+
+.widget textarea {
+  width: 95%;
+  padding: 10px;
+  border: none;
+  margin: 0 auto;
+  resize: none;
+  text-align: left;
+  height: 140px;
+  outline: none;
+  color: #999;
+  font-size: 100%;
+}
+
+.corr-bottom {
+  cursor: default;
+  margin-top: 10px;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.corr-number {
+  color: #999;
+  display: inline-block;
+  margin-left: 20px;
+  padding: 0;
+  font-size: 12px;
+}
+
+.corr-submit {
+  width: 66px;
+  display: inline-block;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 3px;
+  background: #e3e2e2;
+  border: 1px solid #e3e2e2;
+  color: #fff;
+}
+
+.onSubmit {
+  cursor: pointer !important;
+  background: #2d9fff !important;
+  border: 1px solid #2d9fff;
+}
+
+.submit-success-image {
+  background: url("../../../../assets/imgs//err-submit-success.png") no-repeat;
+  height: 123px;
+  width: 123px;
+  margin-top: 50px;
+  margin-left: 50%;
+  transform: translate(-61px, 0);
+}
+
+.submit-success-text {
+  color: #333;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 37px;
+  margin-bottom: 50px;
+}

@@ -1,0 +1,180 @@
+/* 考生信息和注意事项准考证号版 */
+
+$black: black;
+
+.studentInfoNumberVersion {
+  box-sizing: border-box;
+  width: 178mm;
+  height: 70mm;
+  padding-left: 2mm;
+  position: relative;
+
+  // 基本信息
+  .basicInfo, .basicInfoThreeCol {
+    font-weight: bold;
+    font-size: 4mm;
+    overflow: hidden;
+    line-height: 6.6mm;
+
+    .underline {
+      font-family: SimSun-ExtB, NSimSun,SimSun;
+      font-size: 12px;
+      text-decoration: underline;
+    }
+  }
+
+  .basicInfo {
+    width: 95mm;
+    height: 51px;
+  }
+
+  .basicInfoThreeCol {
+    width: 49mm;
+    height: 19mm;
+  }
+
+  // 注意事项
+  .attention {
+    overflow: hidden;
+    border: solid 1px $black;
+    margin-top: 4mm;
+    padding-bottom: 2mm;
+    font-size: 3mm;
+    line-height: 4.5mm;
+    height: 100px;
+    width: 95mm;
+
+    h4 {
+      margin: 0;
+      padding: 1mm 0 0 1mm;
+      text-align: center;
+      font-weight: bold;
+      font-size: 4mm;
+      line-height: 4mm;
+    }
+
+    p {
+      margin: 0;
+      padding-left: 1mm;
+    }
+  }
+
+  .attentionThreeCol {
+    margin-top: 2mm;
+    padding: 0mm;
+    line-height: 3.5mm;
+    height: 125px;
+    width: 49mm;
+  }
+
+  // 相关标记
+  .mark {
+    border: solid 1px $black;
+    height: 7mm;
+    width: 95mm;
+    margin-top: 3mm;
+    line-height: 7mm;
+    display: flex;
+
+    p {
+      font-size: 3mm;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 35%;
+    }
+
+    div {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 15%;
+    }
+
+    .correctMark {
+      margin: 2mm 0;
+      width: 0;
+      height: 0;
+      border-color: black;
+      border-style: solid;
+      border-top-width: calc(1mm + 1px);
+      border-bottom-width: calc(1mm + 1px);
+      border-left-width: calc(2mm + 1px);
+      border-right-width: calc(2mm + 1px);
+    }
+
+    .absenceMark {
+      margin: 2mm 0;
+      width: 4mm;
+      height: 2mm;
+      border: 1px solid $black;
+    }
+  }
+
+  .markThreeCol {
+    height: 5mm;
+    width: 49mm;
+    margin-top: 2mm;
+    line-height: 5mm;
+
+    .correctMark {
+      margin: 1mm 0;
+    }
+
+    .absenceMark {
+      margin: 1mm 0;
+    }
+  }
+
+  /* 准考证号 */
+  .candidateNumber {
+    position: absolute;
+    top: 5mm;
+    left: 107mm;
+    margin: 0;
+    padding: 0;
+    width: 65mm;
+    height: 58.5mm;
+
+    table {
+      font-size: 3mm;
+      table-layout: fixed;
+      border-collapse: collapse;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      line-height: 5mm;
+    }
+
+    th {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      height: 5mm;
+      text-align: center;
+      border: 1px solid $black;
+    }
+
+    td {
+      padding-top: 1px;
+      border: 1px solid $black;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    span {
+      padding: 0 1px;
+    }
+  }
+
+  .candidateNumberThreeCol {
+    left: 53mm;
+    width: 63mm;
+  }
+}

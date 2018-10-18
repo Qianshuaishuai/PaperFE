@@ -1,0 +1,74 @@
+
+.page {
+  margin: 0 auto;
+  width: 58.854166666%;
+  color: #3f3f3f;
+  font-size: 18px;
+  text-align: center;
+  height: 56px;
+  line-height: 56px;
+}
+
+.pageNumber {
+  display: inline-block;
+}
+
+.page a {
+  margin: 0;
+  padding: 0;
+}
+
+.number {
+  display: inline-block;
+  margin-top: 12px;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  outline: none;
+  min-width: 30px;
+  max-height: 35px;
+  line-height: 30px;
+  margin-right: 8px;
+  border-radius: 4px;
+  transition: 100ms;
+}
+
+.jump-number {
+  padding: 0 10px;
+}
+
+.number:hover {
+  cursor: pointer;
+  background: #2d9fff;
+  color: #ffffff;
+  border: 1px solid #2d9fff;
+}
+
+.selectedPageNumber {
+  background: #2d9fff;
+  color: #ffffff;
+  border: 1px solid #2d9fff;
+}
+
+.text {
+  position: absolute;
+  width: 40px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 4px;
+  margin: 0;
+  padding: 0;
+  margin-top: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #d9d9d9;
+  display: inline-block;
+  font-size: 16px;
+  color: #3f3f3f;
+  outline: none;
+  text-align: center;
+}
+
+.jump {
+  padding: 0 10px;
+  margin-left: 56px;
+  cursor: pointer;
+}

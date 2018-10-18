@@ -1,0 +1,121 @@
+.dialog {
+    width: 100%;
+    height: 100%;
+}
+
+.background {
+    opacity: 0.7;
+    background: rgb(0, 0, 0);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+    z-index: 1024;
+}
+
+.dialog-container {
+    width: 600px;
+    height: 280px;
+    z-index: 1026;
+    position: absolute;
+    margin-top: -140px;
+    top: 50%;
+    margin-left: -300px;
+    left: 50%;
+    background: #ffffff;
+}
+
+.dialog-head {
+    width: 100%;
+    height: 60px;
+    background: #2d9fff;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.tip {
+    position: absolute;
+    margin-top: 15px;
+    margin-left: 16px;
+}
+
+.dialog-head img{
+    width: 34px;
+    height: 34px;
+    float: right;
+    margin-top: 13px;
+    margin-right: 21px;
+}
+
+.dialog-head img:hover {
+    cursor: pointer;
+    animation: rotate .5s;
+    -webkit-animation: rotate .5s;
+    -moz-animation:rotate .5s;
+    -o-animation: rotate .5s;
+}
+
+.dialog-content {
+    float: left;
+    width: 100%;
+    font-size: 18px;
+}
+
+.batch-change-score {
+    min-height: 160px;
+}
+
+.batch-change-score ul {
+    list-style: none;
+}
+
+.change-score {
+    margin-left: 28px;
+    margin-top: 30px;
+}
+
+.change-score input {
+    outline: none;
+    height: 24px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.total-score {
+    margin: 0px;
+    margin-left: 24px;
+    margin-top: 30px;
+}
+
+.dialog-footer {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    margin-top: 160px;
+}
+
+.dialog-footer > button {
+    border: none;
+    position: absolute;
+    width: 96px;
+    height: 40px;
+    background: #2d9fff;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+}
+
+.dialog-footer .cancel {
+    margin-left: 120px;
+}
+
+.dialog-footer .sure {
+    margin-right: 120px;
+    right: 0px;
+}

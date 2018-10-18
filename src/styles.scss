@@ -1,0 +1,696 @@
+/* You can add global styles to this file, and also import other style files */
+/* @media only screen and (min-width: 1024px) and (max-width: 1439px){
+    html{
+        font-size: 53.3333333333px;
+    }
+}
+
+@media only screen and (min-width: 1440px )and (max-width: 1920px){
+    html{
+        font-size: 100px;
+    }
+}  */
+
+/* 为了答题卡组件界面能响应式铺满全屏 */
+html {
+  height: 100%;
+}
+
+/*
+ *  组件全局body自带margin属性，为方便其余组件排版，置为０
+ */
+// 组件全局body自带margin属性，为方便其余组件排版，置为０
+
+@import "./app/css/font-awesome.min.css";
+
+body {
+    margin: 0px;
+    position: relative;
+    font-family: “regular” ! important;
+    background: #f8f8f8;
+    /* display: inline; */
+    /* 答题卡界面为了美观需要去掉body的滚动条，若其他组件有需要请自行在组件内加滚动条 */
+    // overflow: scroll !important;
+    overflow-y: auto !important;
+    height: 100%;
+}
+
+body, ul, li {
+    margin: 0px;
+    padding: 0px;
+}
+
+/*客观题目中的空格线*/
+pos {
+  width: auto;
+  min-height: 16px;
+  line-height: 16px;
+  padding: 0px 20px;
+  color: #0198FD;
+  /*border-bottom: 1px solid rgb(228, 21, 27);*/
+  background: url("/assets/imgs/pos-line-bg.svg");
+  display: inline-block;
+  text-indent: 0;
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #dadada;
+  &:hover {
+    background: #2d9fff;
+  }
+}
+
+/* MathJax转换的工具对应css */
+.MathJax_Display{
+    padding: 0px;
+    margin: 0px;
+    width: auto;
+    position: static;
+    display: inline-block !important;
+}
+
+.MathJax{
+    outline:0;
+    width: auto;
+}
+
+.clearfix:after, .clearfix:before {
+  content: "";
+  display: table;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  outline: none;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+::selection
+{
+  color: #2d9fff;
+  background: #e4efff;
+}
+
+::-moz-selection
+{
+  color: #2d9fff;
+  background: #e4efff;
+}
+
+/* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
+
+// overlay
+
+.widget-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+// Common Icons
+
+.common-icons {
+  display: inline-block;
+  background: url(./assets/imgs/common-icon.png) no-repeat;
+  vertical-align: middle;
+}
+
+.delete-question-icon {
+  background-position: -163px -198px;
+  height: 18px;
+  width: 18px;
+}
+
+.save-paper-icon {
+  background-position: -13px -128px;
+  height: 35px;
+  width: 35px;
+}
+
+.analysis-icon {
+  background-position: -14px -88px;
+  height: 35px;
+  width: 35px;
+}
+
+.close-preview-icon {
+  background-position: -242px -173px;
+  height: 18px;
+  width: 18px;
+}
+
+.default-structure-icon {
+  background-position: -62px -172px;
+  height: 18px;
+  width: 18px;
+}
+
+.exam-structure-icon {
+  background-position: -143px -172px;
+  width: 18px;
+  height: 18px;
+}
+
+.standard-structure-icon {
+  background-position: -115px -172px;
+  width: 18px;
+  height: 18px;
+}
+
+.homework-structure-icon {
+  background-position: -90px -172px;
+  width: 18px;
+  height: 18px;
+}
+
+.question-analysis-icon {
+  background-position: -78px -196px;
+  width: 18px;
+  height: 20px;
+}
+
+.question-analysis-icon-hover {
+  background-position: -198px -197px;
+  width: 18px;
+  height: 20px;
+}
+
+.question-correct-icon {
+  background-position: -134px -196px;
+  width: 19px;
+  height: 21px;
+}
+
+.question-correct-icon-hover {
+  background-position: -226px -197px;
+  width: 19px;
+  height: 21px;
+}
+
+.question-insert-icon {
+  background-position: -104px -198px;
+  width: 18px;
+  height: 18px;
+}
+
+.edit-question-icon {
+  background-position: -7px -196px;
+  width: 30px;
+  height: 32px;
+}
+
+.change-type-icon {
+  background-position: -43px -196px;
+  width: 28px;
+  height: 32px;
+}
+
+.unselect-structure-icon {
+  background-position: -7px -172px;
+  width: 14px;
+  height: 14px;
+}
+
+.selected-structure-icon {
+  background-position: -32px -173px;
+  width: 14px;
+  height: 14px;
+}
+
+.drop-down-icon {
+  background-position: -8px -34px;
+  width: 16px;
+  height: 16px;
+}
+
+.take-up-icon {
+  background-position: -32px -35px;
+  width: 16px;
+  height: 16px;
+}
+
+.d-analysis-icon {
+  background-position: -112px -33px;
+  height: 25px;
+  width: 25px;
+}
+
+.g-analysis-icon {
+  background-position: -140px -33px;
+  height: 25px;
+  width: 25px;
+}
+
+.radio-select-icon {
+  background-position: -360px -212px;
+  width: 16px;
+  height: 16px;
+}
+
+.radio-unselect-icon {
+  background-position: -340px -212px;
+  width: 16px;
+  height: 16px;
+}
+
+.delete-icon {
+  background-position: -308px -210px;
+  height: 22px;
+  width: 24px;
+}
+
+.delete-option-icon {
+  background-position: -391px -171px;
+  width: 20px;
+  height: 20px;
+}
+
+.add-option-icon {
+  background-position: -288px -217px;
+  width: 14px;
+  height: 14px;
+}
+
+.delete-key-point-icon {
+  background-position: -200px -176px;
+  width: 11px;
+  height: 11px;
+}
+
+.add-question-icon {
+  background-position: -221px -175px;
+  width: 16px;
+  height: 16px;
+}
+
+.word-icon {
+  background-position: -8px -60px;
+  width: 16px;
+  height: 16px;
+  padding-right: 5.5px;
+}
+
+.pdf-icon{
+  background-position: -35px -60px;
+  width: 16px;
+  height: 16px;
+  padding-right: 5.5px;
+}
+
+.paper-size1{
+  background-position: -72px -60px;
+  width: 77px;
+  height: 103px;
+}
+
+.paper-size2{
+  background-position: -427px -6px;
+  width: 106px;
+  height: 158px;
+}
+
+.paper-size3{
+  background-position: -160px -60px;
+  width: 158px;
+  height: 106px;
+}
+
+.as-toggle-on {
+  background-position: -49px -7px;
+  width: 36px;
+  height: 17px;
+}
+
+.as-toggle-off {
+  background-position: -7px -7px;
+  width: 36px;
+  height: 17px;
+}
+
+.as-col1 {
+  background-position: -291px -6px;
+  width: 37px;
+  height: 37px;
+}
+
+.as-col2 {
+  background-position: -336px -6px;
+  width: 37px;
+  height: 37px;
+}
+
+.as-col3 {
+  background-position: -381px -5px;
+  width: 37px;
+  height: 37px;
+}
+
+.as-col-active {
+  background-position: -241px -5px;
+  width: 42px;
+  height: 44px;
+}
+
+.as-drag {
+  background-position: -424px -170px;
+  width: 20px;
+  height: 29px;
+}
+
+.as-drag-hover {
+  background-position: -454px -170px;
+  width: 20px;
+  height: 29px;
+  cursor: n-resize;
+}
+
+.as-lock {
+  background-position: -92px -6px;
+  width: 17px;
+  height: 18px;
+}
+
+.as-download {
+  background-position: -465px -206px;
+  width: 18px;
+  height: 16px;
+}
+
+.as-print {
+  background-position: -435px -205px;
+  width: 18px;
+  height: 19px;
+}
+
+.as-preview {
+  background-position: -141px -8px;
+  width: 24px;
+  height: 17px;
+}
+
+.as-save {
+  background-position: -215px -5px;
+  width: 19px;
+  height: 19px;
+}
+
+
+// close rotate
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+  }
+}
+
+// tree css
+
+.node-menu {
+  position: relative;
+  width: 150px;
+}
+
+.node-menu .node-menu-content {
+  width: 100%;
+  padding: 5px;
+  position: absolute;
+  border: 1px solid #bdbdbd;
+  border-radius: 5%;
+  box-shadow: 0 0 5px #bdbdbd;
+  background-color: #eee;
+  color: #272727;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  z-index: 999;
+}
+
+.node-menu .node-menu-content li.node-menu-item {
+  list-style: none;
+  padding: 3px;
+}
+
+.node-menu .node-menu-content .node-menu-item:hover {
+  border-radius: 5%;
+  opacity: unset;
+  cursor: pointer;
+  background-color: #bdbdbd;
+  transition: background-color 0.2s ease-out;
+}
+
+.node-menu .node-menu-content .node-menu-item .node-menu-item-icon {
+  display: inline-block;
+  width: 16px;
+}
+
+.node-menu .node-menu-content .node-menu-item .node-menu-item-icon.new-tag:before {
+  content: '\25CF';
+}
+.node-menu .node-menu-content .node-menu-item .node-menu-item-icon.new-folder:before {
+  content: '\25B6';
+}
+
+.node-menu .node-menu-content .node-menu-item .node-menu-item-icon.rename:before {
+  content: '\270E';
+}
+
+.node-menu .node-menu-content .node-menu-item .node-menu-item-icon.remove:before {
+  content: '\2716';
+}
+
+.node-menu .node-menu-content .node-menu-item .node-menu-item-value {
+  margin-left: 5px;
+}
+
+tree-internal ul {
+  padding: 3px 0 3px 25px;
+}
+
+tree-internal li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+tree-internal .over-drop-target {
+  border: 4px solid #757575;
+  transition: padding 0.2s ease-out;
+  padding: 5px;
+  border-radius: 5%;
+}
+
+tree-internal .tree {
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+tree-internal .tree li {
+  list-style: none;
+  cursor: default;
+}
+
+tree-internal .tree li div {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+tree-internal .tree li div input[type="checkbox"] {
+  cursor: pointer;
+}
+
+tree-internal .tree .node-value {
+  display: inline-block;
+  color: #272727;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+tree-internal .tree .node-value:hover {
+  color: #2d9fff;
+}
+
+// tree-internal .tree .node-value:after {
+//   display: block;
+//   padding-top: -3px;
+//   width: 0;
+//   height: 2px;
+//   background-color: #272727;
+//   content: '';
+//   transition: width 0.3s;
+// }
+
+// tree-internal .tree .node-value:hover:after {
+//   width: 100%;
+// }
+
+tree-internal .tree .node-left-menu {
+  display: inline-block;
+  height: 100%;
+  width: auto;
+}
+
+tree-internal .tree .node-left-menu span:before {
+  content: '\2026';
+  color: #757575;
+}
+
+tree-internal .tree .node-selected:after {
+  width: 100%;
+}
+
+tree-internal .tree .folding {
+  width: 25px;
+  display: inline-block;
+  line-height: 1px;
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+tree-internal .tree .folding.node-collapsed {
+  cursor: pointer;
+}
+
+tree-internal .tree .folding.node-collapsed:before {
+  content: '\25B6';
+  color: #757575;
+}
+
+tree-internal .tree .folding.node-expanded {
+  cursor: pointer;
+}
+
+tree-internal .tree .folding.node-expanded:before {
+  content: '\25BC';
+  color: #757575;
+}
+
+tree-internal .tree .folding.node-empty {
+  color: #272727;
+  text-align: center;
+  font-size: 0.89em;
+}
+
+// tree-internal .tree .folding.node-empty:before {
+//   content: '\25CF';
+//   color: #757575;
+// }
+
+tree-internal .tree .folding.node-leaf {
+  color: #272727;
+  text-align: center;
+  font-size: 0.89em;
+}
+
+tree-internal .tree .folding.node-leaf:before {
+  content: '\25CF';
+  color: #757575;
+}
+
+tree-internal ul.rootless {
+  padding: 0;
+}
+
+tree-internal div.rootless {
+  display: none !important;
+}
+
+tree-internal .loading-children:after {
+  content: ' loading ...';
+  color: #6a1b9a;
+  font-style: italic;
+  font-size: 0.9em;
+  animation-name: loading-children;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes loading-children {
+  0%    { color: #f3e5f5; }
+  12.5% { color: #e1bee7; }
+  25%   { color: #ce93d8; }
+  37.5% { color: #ba68c8; }
+  50%   { color: #ab47bc; }
+  62.5% { color: #9c27b0; }
+  75%   { color: #8e24aa; }
+  87.5% { color: #7b1fa2; }
+  100%  { color: #6a1b9a; }
+}

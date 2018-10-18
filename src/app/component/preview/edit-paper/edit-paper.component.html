@@ -1,0 +1,208 @@
+<div class="widget-overlay">
+  <div class="container" id="myModalLabel">
+    <!-- header -->
+    <header class="edit-header">
+      <span *ngIf="editType === 1">编辑试题</span>
+      <span *ngIf="editType === 2">改变题型</span>
+      <span *ngIf="editType === 3">插入试题</span>
+      <img src="/assets/imgs/close.png" (click)="closeEditDialog()"/>
+    </header>
+    <!-- section -->
+    <section #scrollElementRef class="edit-content">
+
+      <!-- edit main -->
+      <div class="edit-main">
+
+        <!-- 材料题 材料部分 -->
+        <div id="questionsContent" *ngIf="isQuestions && editType !== 3" class="edit-item edit-content-item">
+          <label class="edit-label" for="">材料编辑</label>
+          <div class="question-content">
+            <div id="questionsContentEditor" (click)="openCKEditor($event, questionsContent)" #questionsContent contenteditable="true"
+              class="question-text ckEditor" [innerHTML]="question.content | formatHTML:'content' | safe: 'html'"></div>
+          </div>
+        </div>
+
+        <!-- 小题 -->
+        <div *ngFor="let question of question.questions; index as questionIndex">
+          <!-- 设置分数 -->
+          <div *ngIf="editType === 3 || isQuestions">
+            <div [id]="'setScore' + questionIndex" class="edit-item small-question-title">
+              <span class="small-question-text">小题{{questionIndex + 1}}</span>
+              <span *ngIf="editType === 3">
+                <span class="set-score-content">
+                  <input maxlength="3" [id]="'questionScore' + questionIndex" onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+                    class="edit-score"
+                    [(ngModel)]="question.score">
+                    <span (click)="scoreUp(questionIndex)" class="score-up fa fa-caret-up"></span>
+                    <span (click)="scoreDown(questionIndex)" class="score-down fa fa-caret-down"></span>
+                  <span>分</span>
+                </span>
+              </span>
+              <!-- 删除小题按钮 -->
+              <i *ngIf="!isSingleOne" (click)="deleteQuestion(questionIndex)" class="common-icons delete-icon"></i>
+            </div>
+          </div>
+
+          <!-- 选择题型 (*材料题没有选择题型) -->
+          <div *ngIf="editType !== 1" class="select-question-type">
+            <label class="select-type-label">选择题型</label>
+            <div>
+              <div class="select-type-content" [id]="'selectType' + questionIndex"></div>
+              <div *ngFor="let type of questionTypes"
+                [class.select-type-btn]="type.id === question.type"
+                (click)="selectType(type.id, questionIndex)"
+                class="unselect-type-btn">{{type.name}}
+              </div>
+            </div>
+          </div>
+
+          <!-- 题干 -->
+          <div *ngIf="question.type !== 10005 && question.type !== 10006"
+            [id]="'questionContent' + questionIndex"
+            class="edit-item edit-content-item">
+            <label class="edit-label" for="">题干</label>
+              <!-- 不同：format contentQuestions -->
+            <div *ngIf="isQuestions"
+              class="edit-common-input ckEditor"
+              contenteditable="true"
+              [id]="'content' + questionIndex"
+              #questionContent
+              (click)="openCKEditor($event, 'questionContent' + questionIndex, question.type)"
+              [class.underline-input]="question.type === 10005 || question.type === 10006"
+              [innerHTML]="question.content | formatHTML:'contentQuestions' | safe: 'html'"></div>
+              <!-- 不同：format content -->
+            <div *ngIf="!isQuestions"
+              class="edit-common-input ckEditor"
+              contenteditable="true"
+              [id]="'content' + questionIndex"
+              #questionContent
+              (click)="openCKEditor($event, 'questionContent' + questionIndex, question.type)"
+              [class.underline-input]="question.type === 10005 || question.type === 10006"
+              [innerHTML]="question.content | formatHTML:'content' | safe: 'html'"></div>
+          </div>
+
+          <div *ngIf="question.type === 10005 || question.type === 10006">
+            <app-blank-question [question]="question" [index]="questionIndex"></app-blank-question>
+          </div>
+
+          <!-- 选项 选择题默认三项-->
+          <!-- 多选题默认四项 -->
+          <div [id]="'questionOption' + questionIndex" class="edit-item edit-option"
+            *ngIf="question.type === 10001 || question.type === 10002 || question.type === 10003">
+            <label class="edit-label" for="">选项</label>
+            <div *ngFor="let option of question.options; index as optionIndex" class="option-item">
+              <label class="option-label">{{utils.getSelectionName(optionIndex)}}.</label>
+              <div [id]="'option' + questionIndex + optionIndex" (click)="openCKEditor($event, 'questionOption' + questionIndex + optionIndex)" #questionOption class="option-input ckEditor" [innerHTML]="option | formatHTML:'option' | safe: 'html'" contenteditable="true"></div>
+              <!-- <input placeholder="请输入选项内容" class="option-input" type="text"> -->
+              <i class="common-icons delete-option-icon" (click)="removeOption(optionIndex, questionIndex)"></i>
+            </div>
+            <div class="add-btn add-option-btn" (click)="addOption(questionIndex)">
+              <i class="common-icons add-option-icon"></i>
+              添加选项
+            </div>
+          </div>
+
+          <!-- 答案 -->
+          <div [id]="'questionAnswer' + questionIndex" [hidden]="question.type === 10005 || question.type === 10006" class="edit-item answer-option-item">
+            <label *ngIf="question.type !== 10007" class="edit-label" for="">答案</label>
+            <label *ngIf="question.type === 10007" class="edit-label" for="">参考答案</label>
+            <div *ngIf="question.type !== 10007" class="option-content">
+              <!-- 选择题选项 -->
+              <div *ngIf="question.type === 10001 || question.type === 10002 || question.type === 10003">
+                <div *ngFor="let option of question.options; index as optionIndex" class="option-item clearfix">
+                  <span class="option-text">{{utils.getSelectionName(optionIndex)}}.</span>
+                  <!-- 单选题 -->
+                  <span *ngIf="question.type === 10001" class="common-icons option-icon"
+                    (click)="modifyOption(optionIndex, questionIndex)"
+                    [ngClass]="(optionIndex === +(question.answer) && question.answer !== '') ? 'radio-select-icon' : 'radio-unselect-icon'">
+                  </span>
+                  <!-- 多选题 / 不定项 -->
+                  <span *ngIf="question.type === 10002 || question.type === 10003" class="common-icons option-icon"
+                    (click)="modifyOptions(optionIndex, questionIndex)"
+                    [ngClass]="question.answer.indexOf(optionIndex.toString()) > -1 ? 'radio-select-icon' : 'radio-unselect-icon'">
+                  </span>
+                </div>
+              </div>
+              <!-- 判断题选项 -->
+              <div *ngIf="question.type === 10004" class="option-item">
+                <div *ngFor="let option of question.options; index as judgeIndex">
+                  <span *ngIf="judgeIndex === 0" class="option-text">对</span>
+                  <span *ngIf="judgeIndex === 1" class="option-text">错</span>
+                  <span class="common-icons option-icon"
+                    (click)="modifyJudgeAnswer(judgeIndex, questionIndex)"
+                    [ngClass]="(judgeIndex === +(question.answer) && question.answer !== '') ? 'radio-select-icon' : 'radio-unselect-icon'"></span>
+                </div>
+              </div>
+            </div>
+            <!-- 问答题 -->
+            <div (click)="openCKEditor($event, 'questionAnswer' + questionIndex)" #questionAnswer *ngIf="question.type === 10007" contenteditable="true" class="question-answer ckEditor" [innerHTML]="question.answer | formatAnswer:question.type | safe:'html'"></div>
+          </div>
+
+          <!-- 知识点 -->
+          <div [id]="'questionKeyPoint' + questionIndex" class="edit-item key-point-item clearfix" (click)="isShowKeyPoints = false">
+            <label class="edit-label" for="">知识点</label>
+            <div class="key-point-content">
+              <div *ngFor="let keyPoint of question.keypoints" class="infordot fl">
+                <span>{{keyPoint.name}}</span>
+                <i class="common-icons delete-key-point-icon"
+                  (click)="removeKeyPoint(keyPoint, questionIndex)"></i>
+              </div>
+            </div>
+            <div class="spread-trees" (click)="showKeyPoints($event, questionIndex)">
+              <i class="common-icons add-question-icon"></i>
+            </div>
+            <div *ngIf="isShowKeyPoints && (questionIndex === showKeyPointId)" class="close-spread" (click)="isShowKeyPoints = false">
+              <i class="common-icons delete-key-point-icon"></i>
+            </div>
+            <div (click)="stopPropagation($event)" class="key-point-list" *ngIf="isShowKeyPoints && (questionIndex === showKeyPointId)">
+              <!-- <div *ngFor="let keyPoint of keyPointList"> -->
+                <tree
+                  #treeComponent
+                  [tree]="keyPoints"
+                  [settings]="settings"
+                  (nodeSelected)="onNodeSelected($event, questionIndex)"
+                ></tree>
+              <!-- </div> -->
+            </div>
+          </div>
+          <!-- 知识点列表 -->
+
+          <!-- 解析 -->
+          <div [id]="'questionSolution' + questionIndex" class="edit-item analysis-input-item">
+            <label class="edit-label" for="">解析</label>
+            <div #questionSolution
+              (focus)="openCKEditor($event, 'questionSolution' + questionIndex)"
+              class="edit-common-input ckEditor"
+              [innerHtml]="question.solution | safe: 'html'"
+              contenteditable="true">请输入题目解析</div>
+          </div>
+          <!-- (click)="openCKEditor($event, 'questionSolution' + questionIndex)" -->
+
+          <!-- 难易度 -->
+          <div class="edit-item difficulty-item">
+            <label class="edit-label" for="">难易度</label>
+            <div class="difficulty-tag"
+              *ngFor="let difficulty of difficulties"
+              (click)="selectDifficulty(difficulty.value, questionIndex)"
+              [class.select-difficulty]="difficulty.value === transformDifficulty(question.difficulty)"
+              >{{difficulty.name}}</div>
+          </div>
+
+          <!-- ngFor end -->
+        </div>
+
+        <!-- 添加小题(*只有插入小题才有添加小题选项) -->
+        <div *ngIf="editType === 3 && question.questions.length !== 10" class="add-btn"
+          (click)="addQuestion()">
+          <i class="common-icons add-option-icon"></i>
+          添加小题
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="edit-footer">
+      <div class="finish-btn" appDebounceClick (debounceClick)="onSubmit()" [debounceTime]="DEFAULT_DEBOUNCE_TIME">完成</div>
+    </footer>
+  </div>
+</div>

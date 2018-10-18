@@ -1,0 +1,42 @@
+<div [ngSwitch]="pageIndex"
+  [style.left.mm]="isThreeCol ? 100 : 70"
+  class="pageIndexContainer">
+  <div *ngSwitchCase="1"
+    class="index">
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+    <div class="black"></div>
+  </div>
+  <div *ngSwitchCase="2"
+    class="index">
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+    <div class="black"></div>
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+  </div>
+  <div *ngSwitchCase="3"
+    class="index">
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+    <div class="black"></div>
+    <div class="black"></div>
+  </div>
+  <div *ngSwitchCase="4"
+    class="index">
+    <div class="black"></div>
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+    <div class="white">
+      <div class="slash"></div>
+    </div>
+  </div>
+</div>

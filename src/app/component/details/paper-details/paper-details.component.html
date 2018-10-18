@@ -1,0 +1,192 @@
+<div #contain class="contain" (click)="hideSolutionDialog()">
+  <!-- 试卷标题栏 -->
+  <div #copy></div>
+  <header class="head">
+    <div class="detail-title">
+      <img src="../../assets/paper_logo.png">
+      <!-- <hr class="divider" />
+      <span>试卷库</span> -->
+      <span class="return" (click)="return()">返回&nbsp;></span>
+      <!--<button class="return" (click)="turnBack()">返回</button>-->
+      <!-- <span id="selectedItem">已选资源（5）</span> -->
+    </div>
+  </header>
+
+  <div class="loading">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  <div [hidden]="isLoading">
+    <!-- 试卷主部分 -->
+    <div #mainClassHeight class="main">
+      <!-- 试卷 信息 -->
+      <div class="paper-information">
+        <p>试卷信息</p>
+        <div class="subTitle">
+          <span [hidden]="!isShowDifficulty" id="difficulty">{{paperDifficulty}}</span>
+          <span>满分：{{fullScore}}分</span>
+        </div>
+
+        <div class="questions">
+          <span class="questions-title">题型分布和题量分析</span>
+          <table cellspacing="0" cellpadding="0" class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="width: 46%;">题型</th>
+                <th>题量</th>
+                <th>分值</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-tr" *ngFor="let chapter of paperQuestionSetChapters; index as i" (click)="handleAnchor(i)">
+                <td class="noWrap">{{utils.matchingNumber(i + 1) + ' . ' + chapter.name}}</td>
+                <td>{{chapter.questionCount}} 题</td>
+                <td>{{chapter.presetScore}}分</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <div class="bottom-button">
+            <button (click)="isShowDownloadPaper = true">
+              <i class="common-icons as-download"></i>
+              下载试卷
+            </button>
+            <button (click)="isShowDownloadAns()">
+              <i class="common-icons as-download"></i>
+              下载答题卡
+            </button>
+          </div> -->
+        </div>
+
+        <footer class="paper-information-footer">
+          <button (click)="download()" class="download-paper">
+            <img src="../../../../assets/imgs/download-paper-white.png" alt="下载试卷的图片" class="download-paper-img">
+            下载试卷
+          </button>
+          <!-- <button *ngIf="isSyncPaper !== 3" (click)="isShowDownloadAns()" class="download-answer-sheet">
+            <img src="../../../../assets/imgs/download-answer-sheet-white.png" alt="下载答题卡的图片" class="download-paper-img">
+            下载答题卡
+          </button> -->
+        </footer>
+      </div>
+
+      <!-- 试卷题目 -->
+      <div class="paper-questions">
+        <div class="question-informations">
+          <h3 id="mainTitle" class="paper-title">{{title}}</h3>
+          <span id="time">{{time}}：{{paperDate}}</span>
+          <span style="margin-left:40px; ">类型：{{typeName}}</span>
+        </div>
+
+
+        <div [hidden]="isFromEbagEnter ">
+          <button appDebounceClick (debounceClick)="joinAllQuestionsBasket() " [debounceTime]="DEFAULT_DEBOUNCE_TIME
+        " [hidden]="isJoinAll " class="all-question-basket join-all-question-basket ">全部加入试题篮</button>
+          <button appDebounceClick (debounceClick)="removeAllQuestionsFromBasket() " [debounceTime]="DEFAULT_DEBOUNCE_TIME
+        " [hidden]="!isJoinAll " class="all-question-basket remove-all-from-question-basket ">全部移出试题篮</button>
+        </div>
+
+        <!-- <div class="paper-hr "></div> -->
+        <!-- 试卷题目正文 -->
+        <div #scroll class="question-list " id="paperContent">
+          <div *ngFor="let paperQuestionSetChapter of paperQuestionSetChapters; index as i ">
+            <div [id]="i ">
+              <p id="type" class="counts">{{ utils.matchingNumber(i + 1) + '.' + paperQuestionSetChapter.name}}
+                <span style="color: #999 ">{{paperQuestionSetChapter.desc}}
+                </span>
+              </p>
+              <p *ngIf="!paperQuestionSetChapter.isWithResource ">暂无资源</p>
+              <!-- level one -->
+              <div *ngFor="let question of paperQuestionSetChapter.questionsContent; index as j" class="borders">
+                <div (click)="selectQuestion(question.id); errorTipActive = false" class="question-item-content" #origin>
+                  <div class="question-number">{{question.number}}.</div>
+                  <p [innerHTML]="question.content.split('&nbsp;').join(' ') | safe: 'html'" class="question-content"></p>
+                  <div *ngIf="question.questions != undefined && question.questions.length > 0; else notmaterial">
+                    <!-- level two -->
+                    <div *ngFor="let subquestion of question.questions;" class="item">
+                      <p *ngIf="subquestion.options !== undefined; else serial" [innerHTML]="subquestion.content | safe: 'html'"></p>
+                      <ng-template #serial>
+                        <p [innerHTML]="subquestion.content | safe: 'html'">
+                        </p>
+                      </ng-template>
+                      <p style="padding-left: 15px;" *ngFor="let option of subquestion.options;" id="materials" [innerHtml]="option | safe: 'html'"></p>
+                      <!-- <div class="hr"></div> -->
+                      <!-- <div class="option">
+                      <button class="solution" (click)="showSolutionDialog(subquestion, paperQuestionSetChapter.name, $event)">解析</button>
+                      <button class="correction" (click)="showCorrectionDialog(subquestion, $event)">纠错</button>
+                    </div> -->
+                    </div>
+
+                    <!-- <div [hidden]="isFromEbagEnter">
+                    <button appDebounceClick (debounceClick)="joinQuestionBasket(question)" [debounceTime]="DEFAULT_DEBOUNCE_TIME" [hidden]="question.isJoinQuestionBasket"
+                      class="sub-question-basket join-question-basket">加入试题篮</button>
+                    <button appDebounceClick (debounceClick)="removeFromQuestionBasket(question)" [debounceTime]="DEFAULT_DEBOUNCE_TIME" [hidden]="!question.isJoinQuestionBasket"
+                      class="sub-question-basket remove-from-question-basket">移出试题篮</button>
+                  </div> -->
+
+                  </div>
+                  <ng-template #notmaterial>
+                    <p *ngFor="let option of question.options;" id="materials" [innerHtml]="option | safe: 'html'"></p>
+                  </ng-template>
+                </div>
+                <!-- <div class="question-hr" *ngIf="question.questions == undefined"></div> -->
+                <!-- <div class="option" *ngIf="question.questions == undefined"> -->
+                <!-- <button class="solution" (click)="showSolutionDialog(question, paperQuestionSetChapter.name, $event)">解析</button>
+                <button class="correction" (click)="showCorrectionDialog(question, $event)">纠错</button> -->
+                <div class="question-tip">
+                  <span class="show-analysis-icon" [class.question-tip-active]="question.id === questionActive && solutionTipActive" (click)="selectQuestion(question.id); errorTipActive = false">
+                    <i class="common-icons" [ngClass]="question.id === questionActive && solutionTipActive ? 'question-analysis-icon-hover' : 'question-analysis-icon'"></i>
+                    <span *ngIf="question.id === questionActive && solutionTipActive; else elseBlock" class="analysis-icon-text">收起</span>
+                    <ng-template #elseBlock>
+                      <span class="analysis-icon-text">解析</span>
+                    </ng-template>
+                  </span>
+                  <span class="show-correct-icon" [class.question-tip-active]="question.id === questionActive && errorTipActive" (click)="selectError(question.id); solutionTipActive = false">
+                    <i class="common-icons" [ngClass]="question.id === questionActive && errorTipActive ? 'question-correct-icon-hover' : 'question-correct-icon'"></i>纠错
+                  </span>
+                  <span>
+                    <div [hidden]="isFromEbagEnter">
+                      <button appDebounceClick (debounceClick)="joinQuestionBasket(question)" [debounceTime]="DEFAULT_DEBOUNCE_TIME" [hidden]="question.isJoinQuestionBasket"
+                        class="question-basket join-question-basket">加入试题篮</button>
+                      <button appDebounceClick (debounceClick)="removeFromQuestionBasket(question)" [hidden]="!question.isJoinQuestionBasket" class="question-basket remove-from-question-basket">移出试题篮</button>
+                    </div>
+                  </span>
+                </div>
+
+                <!-- solution level one -->
+                <div *ngIf="!isPrintPaper && (!question.questions && question.id === questionActive && solutionTipActive)" class="pre-solution">
+                  <app-solution [level]="'1'" [question]="question"></app-solution>
+                </div>
+
+                <!-- solution level two -->
+                <div *ngIf="!isPrintPaper && (question.questions && question.id === questionActive && solutionTipActive)" class="pre-solution">
+                  <app-solution [level]="'2'" [question]="question"></app-solution>
+                </div>
+
+                <!-- print paper level one -->
+                <div *ngIf="isPrintPaper && !question.questions" class="pre-solution">
+                  <app-solution [level]="'1'" [question]="question"></app-solution>
+                </div>
+                <!-- print paper level two -->
+                <div *ngIf="isPrintPaper && question.questions" class="pre-solution">
+                  <app-solution [level]="'2'" [question]="question"></app-solution>
+                </div>
+
+                <!-- submit error -->
+                <div *ngIf="question.id === questionActive && errorTipActive">
+                  <app-correct [questionId]="question.id"></app-correct>
+                </div>
+
+                <!-- </div> -->
+              </div>
+              <!-- level one end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-prompt-message></app-prompt-message>
+  <app-question-basket [hidden]="isFromEbagEnter" (questionCount)="getQuestionIdsCount($event)"></app-question-basket>
+  <div *ngIf="isShowDownloadPaper">
+    <app-paper-download [entryType]="1" (isCloseDownloadPaper)="isCloseDownloadPaper($event)"></app-paper-download>
+  </div>

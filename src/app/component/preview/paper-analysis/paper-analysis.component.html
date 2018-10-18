@@ -1,0 +1,66 @@
+<div class="widget-overlay">
+  <div class="modal">
+    <div class="header">
+      <span class="modal-title">试卷分析</span>
+      <img src="assets/imgs/close.png" alt="close" (click)="closeAnalysis()">
+    </div>
+
+    <article>
+      <div class="d-analysis">
+        <span class="d-analysis-title"><i class="common-icons d-analysis-icon"></i>难度分析</span>
+        <span class="score-count">总分：{{allScoreCount}}分</span>
+        <div class="echarts-content">
+          <div echarts id="main" [options]="options"></div>
+        </div>
+      </div>
+
+      <div class="g-analysis-title"><i class="common-icons g-analysis-icon"></i>总体分布分析</div>
+      <div class="g-analysis">
+        <table border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>题型</th>
+              <th>题量</th>
+              <th>分值</th>
+              <th>分值占比</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let chapter of paperQuestionSetChapters;">
+              <td>{{chapter.name}}</td>
+              <td>{{chapter.questionCount}} 题</td>
+              <td>{{chapter.presetScore}}分</td>
+              <td>{{(chapter.presetScore / allScoreCount) | percent}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!--
+      <div class="k-analysis">
+        <span class="k-analysis-title">知识点分析</span>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th style="width: 40%">知识点</th>
+              <th>分值</th>
+              <th>分值占比</th>
+              <th>对应题号</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>实用类文本阅读</td>
+              <td>30.0 分</td>
+              <td>50.0%</td>
+              <td>1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      -->
+    </article>
+  </div>
+</div>

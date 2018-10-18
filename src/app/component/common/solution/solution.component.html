@@ -1,0 +1,49 @@
+<div>
+  <!-- level one -->
+  <div *ngIf="rank === 1">
+    <div *ngIf="question.answer" class="ana-list clearfix" data-solution-type="answer">
+      <span>【答案】</span>
+      <br>
+      <div [innerHTML]="question.answer | formatAnswer:question.type | safe: 'html' "></div>
+    </div>
+    <div *ngIf="question.solution" class="ana-list clearfix" data-solution-type="solution">
+      <span>【解析】</span>
+      <br>
+      <div [innerHTML]="question.solution | safe: 'html'"></div>
+    </div>
+    <div *ngIf="question.keypoints && question.keypoints.length" class="ana-list clearfix" data-solution-type="keyPoint">
+      <span class="fl">【知识点】</span>
+      <div class="ana-keypoint clearfix">
+        <span *ngFor="let keypoint of question.keypoints" class="infordot fl">{{keypoint.name}}</span>
+      </div>
+    </div>
+  </div>
+  <!-- level two -->
+  <div *ngIf="rank === 2">
+    <div class="ana-list clearfix" data-solution-type="answer">
+      <span>【答案】</span>
+      <br>
+      <div *ngFor="let question of question.questions; index as answerIndex">
+        <span class="solution-number">（{{answerIndex + 1}}）</span>
+        <span [innerHTML]="question.answer | formatAnswer:question.type | safe: 'html'"></span>
+      </div>
+    </div>
+    <div *ngIf="question.questions[0].solution && question.questions[0].solution.length" class="ana-list clearfix" data-solution-type="solution">
+      <span>【解析】</span>
+      <br>
+      <div *ngFor="let question of question.questions; index as solutionIndex">
+        （{{solutionIndex + 1}}）
+        <span [innerHTML]="question.solution | safe: 'html'"></span>
+      </div>
+    </div>
+    <div *ngIf="question.questions[0].keypoints && question.questions[0].keypoints.length" class="ana-list clearfix" data-solution-type="keyPoint">
+      <span class="fl">【知识点】</span>
+      <div class="ana-keypoint clearfix">
+        <span *ngFor="let keyPoint of keyPoints" class="infordot fl">{{keyPoint.name}}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="rank === 2 && !question.questions.length">
+    暂无解析
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div [hidden]="isHidden" class="widget-overlay">
+  <div class="message-dialog">
+    <header class="message-header">
+      <span>温馨提示</span>
+      <img src="/assets/imgs/close.png" (click)="close()"/>
+    </header>
+    <section class="message-content">
+      <span>{{message}}</span>
+    </section>
+  </div>
+</div>

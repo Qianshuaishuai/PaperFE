@@ -1,0 +1,109 @@
+cache:
+ paths:
+   - node_modules/
+
+stages:
+  - build
+  - test
+  - deploy
+
+master build:
+  image: node:8.11.3
+  stage: build
+  script:
+    - npm install --progress=false
+    - node ./tools/generate.config.ts
+    - npm run build
+    - qshell='./tools/qshell-linux-x64'
+    - chmod a+x "${qshell}"
+    - ${qshell} account "${QINIU_AK}" "${QINIU_SK}"
+    - ${qshell} qupload 8 ./qiniuconfig
+  only:
+    - master
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+develop build:
+  image: node:8.11.3
+  stage: build
+  script:
+    - npm install --progress=false
+    - node ./tools/generate.config.ts develop
+    - npm run build
+    - qshell='./tools/qshell-linux-x64'
+    - chmod a+x "${qshell}"
+    - ${qshell} account "${QINIU_AK}" "${QINIU_SK}"
+    - ${qshell} qupload 8 ./qiniuconfig
+  only:
+    - develop
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+deploy_develop:
+  image: sebble/deploy
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$TEST_DEPLOY_SSH" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -rav -e 'ssh -p 1078' dist/* "$TEST_DEPLOY_USER"@"$TEST_DEPLOY_HOST":/data/www_DreamEbagPapersFE
+  only:
+    - develop
+
+deploy:
+  image: sebble/deploy
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$PROD_DEPLOY_SSH" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - mkdir -p /data/www_DreamEbagPapersFE
+    - rsync -rav -e 'ssh -p 1078' dist/ "$PROD_DEPLOY_USER"@"$PROD_DEPLOY_HOST":/data/www_DreamEbagPapersFE
+  only:
+    - master
+
+newAssembly build:
+  image: node:8.11.3
+  stage: build
+  script:
+    - npm install --progress=false
+    - node ./tools/generate.config.ts newAssembly
+    - npm run build
+    - qshell='./tools/qshell-linux-x64'
+    - chmod a+x "${qshell}"
+    - ${qshell} account "${QINIU_AK}" "${QINIU_SK}"
+    - ${qshell} qupload 8 ./qiniuconfig
+  only:
+    - newAssembly
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+pages:
+  stage: deploy
+  script:
+  - mv dist public
+  artifacts:
+    expire_in: 3 days
+    paths:
+    - public
+  only:
+  - newAssembly
+
+deploy_newAssembly:
+  image: sebble/deploy
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$TEST_DEPLOY_SSH" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -rav -e 'ssh -p 1078' dist/* "$TEST_DEPLOY_USER"@"$TEST_DEPLOY_HOST":/data/www_DreamEbagPapersFE_assembly
+  only:
+    - newAssembly

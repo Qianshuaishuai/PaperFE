@@ -1,0 +1,20 @@
+$locatePointColor: black;
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+/* 定位点 */
+.sizePoint {
+  border: 2.5mm solid $locatePointColor;
+  position: absolute;
+}
+
+.borderPoint {
+  position: absolute;
+  border: 1mm solid $locatePointColor {
+    top: 2.5mm solid $locatePointColor;
+    bottom: 2.5mm solid $locatePointColor;
+  }
+}

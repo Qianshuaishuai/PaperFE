@@ -1,0 +1,78 @@
+<div class="selector" [ngStyle]="{'height.px':height}">
+
+  <div id="grade" class="grade">
+    <span class="category">年级：</span>
+    <ul>
+      <li *ngFor="let grade of grades">
+        <a *ngIf="isSearchModel" routerLink='{{keyword}}/{{courseId}}/{{grade.gradeId}}/{{provinceId}}/{{paperTypeId}}/0' class="normal" [class.selected]="grade === selectedGrade" (click)="selectGrade(grade)">{{grade.name}}</a>
+
+        <a *ngIf="isClickMinePaper === 2" routerLink='{{courseId}}/{{grade.gradeId}}/{{paperTypeId}}/0' class="normal" [class.selected]="grade === selectedGrade" (click)="selectGrade(grade)">{{grade.name}}</a>
+
+        <a *ngIf="!isSearchModel && isClickMinePaper !== 2" routerLink='{{courseId}}/{{grade.gradeId}}/{{provinceId}}/{{paperTypeId}}/0' class="normal" [class.selected]="grade === selectedGrade" (click)="selectGrade(grade)">{{grade.name}}</a>
+
+        <!-- <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink='{{courseId}}/{{grade.gradeId}}/0/{{paperTypeId}}/0' class="normal" [class.selected]="grade === selectedGrade" (click)="selectGrade(grade)">{{grade.name}}</a> -->
+      </li>
+    </ul>
+  </div>
+
+  <div id="type" class="type">
+    <span class="category">类型：</span>
+    <ul>
+      <li *ngFor="let type of types">
+          <a *ngIf="isSearchModel" routerLink='{{keyword}}/{{courseId}}/{{gradeId}}/{{provinceId}}/{{type.id}}/0' class="normal" [class.selected]="type === selectedType" (click)="selectType(type)">{{type.name}}</a>
+
+          <a *ngIf="isClickMinePaper === 2" routerLink='{{courseId}}/{{gradeId}}/{{type.id}}/0' class="normal" [class.selected]="type === selectedType" (click)="selectType(type)">{{type.name}}</a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper !== 2" routerLink='{{courseId}}/{{gradeId}}/{{provinceId}}/{{type.id}}/0'  class="normal" [class.selected]="type === selectedType" (click)="selectType(type)">{{type.name}}</a>
+
+          <!-- <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink='{{courseId}}/{{gradeId}}/0/{{type.id}}/0'  class="normal" [class.selected]="type === selectedType" (click)="selectType(type)">{{type.name}}</a> -->
+      </li>
+    </ul>
+  </div>
+
+  <div id="province" class="province">
+    <span class="category">地区：</span>
+    <ul>
+      <li *ngFor="let province of provinces">
+        <a *ngIf="isSearchModel" routerLink='{{keyword}}/{{courseId}}/{{gradeId}}/{{province.id}}/{{paperTypeId}}/0' class="normal" [class.selected]="province === selectedProvince" (click)="selectProvince(province)">{{province.name}}</a>
+
+        <a *ngIf="isClickMinePaper === 2" routerLink='{{courseId}}/{{gradeId}}/{{paperTypeId}}/0' class="normal" [class.selected]="province === selectedProvince" (click)="selectProvince(province)">{{province.name}}</a>
+
+        <a *ngIf="!isSearchModel && isClickMinePaper === 1" routerLink='{{courseId}}/{{gradeId}}/{{province.id}}/{{paperTypeId}}/0'  class="normal" [class.selected]="province === selectedProvince" (click)="selectProvince(province)">{{province.name}}</a>
+      </li>
+    </ul>
+    <a class="more" (click)="seeMore(1)">{{more}}</a>
+  </div>
+  <!-- <a [routerLink]="['/library', { outlets: {'list': [courseId, gradeId, province.id, paperTypeId, 0]}}]" class="normal" [class.selected]="province === selectedProvince" (click)="selectProvince(province)">{{province.name}}</a> -->
+
+  <!-- 同步试卷 版本 -->
+  <div *ngIf="isClickMinePaper === 3" class="syncSelector">
+    <div id="bookname" class="bookname" [ngClass]="{'see-less': !isBooknameFade}">
+      <span class="category">版本：</span>
+      <ul>
+        <li *ngFor="let bookname of booknames">
+          <!-- <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink='{{courseId}}/{{gradeId}}/{{provinceId}}/type/0'  class="normal" [class.selected]="bookname === selectedBookname" (click)="selectBookname(bookname)">{{bookname}}</a> -->
+          <a *ngIf="!isSearchModel && isClickMinePaper === 3" class="normal" [class.selected]="bookname === selectedBookname" (click)="selectBookname(bookname)">{{bookname}}</a>
+        </li>
+      </ul>
+    </div>
+    <span [hidden]="isClickMinePaper !== 3">
+      <a class="sync-more" (click)="seeMore(2)">{{moreBooknames}}</a>
+    </span>
+  </div>
+
+  <!-- 同步试卷 教材 -->
+  <div *ngIf="isClickMinePaper === 3" class="syncSelector">
+    <div id="book" class="book" [ngClass]="{'see-less': !isBookFade}">
+      <span class="category">教材：</span>
+      <ul>
+        <li *ngFor="let book of books">
+          <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink='{{courseId}}/{{gradeId}}/{{book.bookId}}/{{paperTypeId}}/0'  class="normal" [class.selected]="book.bookId === selectedBook.bookId" (click)="selectBook(book)">{{book.bookName}}</a>
+        </li>
+      </ul>
+    </div>
+    <span [hidden]="isClickMinePaper !== 3">
+      <a class="sync-more" (click)="seeMore(3)">{{moreBooks}}</a>
+    </span>
+  </div>
+</div>

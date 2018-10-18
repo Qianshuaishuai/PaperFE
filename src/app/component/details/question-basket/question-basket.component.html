@@ -1,0 +1,25 @@
+<div #basket class="basket">
+  <div class="basket-title" (click)="clickBasket()">
+    <p>试题篮</p>
+    <p>
+      <img src="{{imgSource}}" alt="关闭试题篮" />
+    </p>
+  </div>
+  <div class="basket-content">
+    <div class="basket-head">
+      共：(
+      <span>{{totalCount}}</span>)&nbsp;道题
+    </div>
+    <ul class="basket-list">
+      <li *ngFor="let questionType of questionTypeList">
+        <span class="question-type">{{questionType.name}}：</span>
+        <span class="count">{{questionType.questionCount}} </span> 道
+        <img src="assets/imgs/delete_question_type.png" (click)="deleteQuestionType(questionType)" />
+      </li>
+    </ul>
+    <div class="basket-foot">
+      <button (click)="generatePaper()">生成试卷</button>
+    </div>
+  </div>
+</div>
+<app-dialog></app-dialog>

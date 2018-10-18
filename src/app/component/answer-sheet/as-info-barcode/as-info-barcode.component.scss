@@ -1,0 +1,152 @@
+/* 考生信息和注意事项条形码版 */
+
+$black: black;
+$grey: grey;
+
+.studentInfoBarCodeVersion {
+  box-sizing: border-box;
+  width: 178mm;
+  height: 54mm;
+  padding-left: 2mm;
+  position: relative;
+
+  // 基本信息
+  .basicInfo, .basicInfoThreeCol {
+    font-weight: bold;
+    font-size: 4mm;
+    overflow: hidden;
+
+    .underline {
+      font-family: SimSun-ExtB, NSimSun,SimSun;
+      font-size: 12px;
+      text-decoration: underline;
+    }
+  }
+
+  .basicInfo{
+    line-height: 5mm;
+    height: 40px;
+    width: 95mm;
+  }
+
+  .basicInfoThreeCol {
+    line-height: 6mm;
+    height: 66px;
+    width: 49mm;
+  }
+
+  // 注意事项
+  .attention {
+    overflow: hidden;
+    border: solid 1px $black;
+    margin-top: 4mm;
+    padding-bottom: 2mm;
+    font-size: 3mm;
+    line-height: 3.5mm;
+    height: 132.44094px;
+    width: 95mm;
+
+    h4 {
+      margin: 0;
+      padding: 1mm 0 0 1mm;
+      text-align: center;
+      font-weight: bold;
+      font-size: 4mm;
+      line-height: 4mm;
+    }
+
+    p {
+      margin: 0;
+      padding-left: 1mm;
+    }
+  }
+
+  .attentionThreeCol {
+    margin-top: 2mm;
+    padding-bottom: 1mm;
+    height: 106px;
+    width: 49mm;
+  }
+
+  .barCodeZone {
+    color: $grey;
+    position: absolute;
+    top: 5mm;
+    left: 107mm;
+    margin: 0;
+    padding: 0;
+    width: 63mm;
+    height: 27mm;
+    border: 1px dashed $black;
+
+    h2 {
+      font-weight: normal;
+      font-size: 6mm;
+      text-align: center;
+      width: 100%;
+      margin: 0;
+      padding-top: 3mm;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 9mm;
+    }
+  }
+
+  .barCodeZoneThreeCol {
+    left: 53mm;
+  }
+
+  // 相关标记
+  .mark {
+    border: solid 1px $black;
+    height: 7mm;
+    width: 63mm;
+    margin-top: 3mm;
+    line-height: 7mm;
+    display: flex;
+    position: absolute;
+    top: 32mm;
+    left: 107mm;
+
+    p {
+      font-size: 3mm;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 35%;
+    }
+
+    div {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 15%;
+    }
+
+    .correctMark {
+      margin: 2mm 0;
+      width: 0;
+      height: 0;
+      border-color: black;
+      border-style: solid;
+      border-top-width: calc(1mm + 1px);
+      border-bottom-width: calc(1mm + 1px);
+      border-left-width: calc(2mm + 1px);
+      border-right-width: calc(2mm + 1px);
+    }
+
+    .absenceMark {
+      margin: 2mm 0;
+      width: 4mm;
+      height: 2mm;
+      border: 1px solid $black;
+    }
+  }
+
+  .markThreeCol {
+    left: 53mm;
+  }
+}

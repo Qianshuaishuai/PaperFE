@@ -1,0 +1,21 @@
+<div class="widget-overlay">
+  <div class="download-dialog">
+    <header class="download-header">
+      <span>温馨提示</span>
+      <img src="/assets/imgs/close.png" (click)="return()"/>
+    </header>
+    <section class="download-section">
+      亲爱的老师，您的试卷已保存！您可以选择：
+    </section>
+    <footer class="download-selection">
+      <div style="margin-left: 50px;" (click)="show()">下载试卷</div>
+      <!-- <div (click)="isShowDownloadAns()">下载答题卡</div> -->
+      <div style="margin-right: 50px;" (click)="return()">继续组卷</div>
+    </footer>
+  </div>
+</div>
+<div *ngIf="isShowDownloadPaper">
+  <app-paper-download
+    (isCloseDownloadPaper)="isCloseDownloadPaper($event)">
+  </app-paper-download>
+</div>

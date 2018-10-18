@@ -1,0 +1,28 @@
+<!-- 四角的定位点 -->
+<!-- 左上 -->
+<div *ngIf="isLeftBorder"
+  [style.top.mm]="isThreeCol ? 12 : 11"
+  [style.left.mm]="isThreeCol ? 12 : 6"
+  class="sizePoint"></div>
+<!-- 右上 -->
+<div *ngIf="isRightBorder"
+  [style.top.mm]="isThreeCol ? 12 : 11"
+  [style.left.mm]="isThreeCol ? 123 : 199"
+  class="sizePoint"></div>
+<!-- 右下 -->
+<div *ngIf="isRightBorder"
+  [style.top.mm]="isThreeCol ? 280 : 281"
+  [style.left.mm]="isThreeCol ? 123 : 199"
+  class="sizePoint"></div>
+<!-- 左下 -->
+<div *ngIf="isLeftBorder"
+  [style.top.mm]="isThreeCol ? 280 : 281"
+  [style.left.mm]="isThreeCol ? 12 : 6"
+  class="sizePoint"></div>
+<!-- 边界的定位点 -->
+<div *ngIf="isLeftBorder">
+  <div *ngFor="let borderPoint of borderPoints"
+    class="borderPoint"
+    [style.left.mm]="isThreeCol ? 12 : 6"
+    [style.top.mm]="borderPoint.top"></div>
+</div>

@@ -1,0 +1,28 @@
+<div class="correction clearfix" *ngIf="!submitSuccess">
+  <div class="error_reason">错误原因</div>
+  <div class="error_choice">
+    <span [class.choiceActive]="choiceActives[0]" (click)="selectErrorType(0)">题干错别字</span>
+    <span [class.choiceActive]="choiceActives[1]" (click)="selectErrorType(1)">答案错误</span>
+    <span [class.choiceActive]="choiceActives[2]" (click)="selectErrorType(2)">解析错误</span>
+    <span [class.choiceActive]="choiceActives[3]" (click)="selectErrorType(3)">题目超纲</span>
+    <span [class.choiceActive]="choiceActives[4]" (click)="selectErrorType(4)">其它</span>
+  </div>
+  <div class="widget">
+    <textarea maxlength="100"
+      style="color: #333;"
+      onchange="this.value=this.value.substring(0, 100)"
+      onkeydown="this.value=this.value.substring(0, 100)"
+      onkeyup="this.value=this.value.substring(0, 100)"
+      placeholder="请描述错误的地方，不超过100字"
+      [(ngModel)]="content" #textarea></textarea>
+  </div>
+  <div class="corr-bottom clearfix">
+    <span class="corr-number">试题编号：{{questionId}}</span>
+    <a *ngIf="onSubmit" class="corr-submit fr onSubmit" (click)="submit(textarea.value)">提交</a>
+    <a *ngIf="!onSubmit" class="corr-submit fr">提交</a>
+  </div>
+</div>
+<div class="correction clearfix" *ngIf="submitSuccess">
+  <div class="submit-success-image"></div>
+  <div class="submit-success-text">感谢您的反馈，我们将对此题目进行核查</div>
+</div>

@@ -1,0 +1,65 @@
+<div [hidden]="isLoading">
+  <div class="list">
+    <ul [hidden]='isEmpty'>
+      <li #paperLi *ngFor="let paper of paperList">
+        <img src="assets/imgs/default.png" alt="试卷" />
+        <a *ngIf="!isSyncPaper" routerLink="/detail/{{paper.id}}/2/1/1">
+          <span [id]="paper.id" (click)="enterDetail($event)" class="title">{{paper.name}}</span>
+        </a>
+
+        <a *ngIf="isSyncPaper" routerLink="/detail/{{paper.id}}/2/1/3">
+          <span [id]="paper.id" (click)="enterDetail($event)" class="title">{{paper.name}}</span>
+        </a>
+
+        <span class="upload-time info">更新时间：{{paper.date.substring(0, 10)}}</span>
+        <!-- <span class="type info">类型：{{paper.typeName}}</span> -->
+
+        <!-- <span *ngIf="paper.difficulty > 0 && paper.difficulty < 4.0" class="difficulty info">难度：困难</span>
+        <span *ngIf="paper.difficulty >= 4.0 && paper.difficulty < 5.1" class="difficulty info">难度：一般</span>
+        <span *ngIf="paper.difficulty >= 5.1" class="difficulty info">难度：简单</span> -->
+
+        <!-- <span class="count info">引用次数：{{paper.referenceCount}}</span> -->
+
+        <button appDebounceClick (debounceClick)="quote(paper)" [debounceTime]="DEFAULT_DEBOUNCE_TIME" [hidden]="paper.isQuote" class="quote">引用</button>
+        <button appDebounceClick (debounceClick)="cancelQuote(paper.id)" [debounceTime]="DEFAULT_DEBOUNCE_TIME" [hidden]="!paper.isQuote"
+          class="cancel-quote">取消引用</button>
+        <div class="item-bottom">
+          <div class="item-tag clearfix">
+            <span *ngIf="paper.gradeName">{{paper.gradeName}}</span>
+            <span *ngIf="paper.typeName">{{paper.typeName}}</span>
+            <span *ngIf="paper.provinceName">{{paper.provinceName}}</span>
+            <span *ngIf="paper.difficulty">{{paper.difficulty | difficulty}}</span>
+            <span *ngIf="!isSyncPaper">浏览<a>{{paper.browseCount}}</a>次</span>
+            <span *ngIf="isSyncPaper">{{bookName}}</span>
+            <span *ngIf="isSyncPaper">{{syncVersion}}</span>
+          </div>
+          <div class="item-download">
+            <!--<span class="mine-download download-paper" (click)="downloadPaper(paper.id)">-->
+              <!--<span class="download-paper-icon"></span>-->
+              <!--<span class="download-text">下载试卷</span>-->
+            <!--</span>-->
+            <!-- <span *ngIf="!isSyncPaper" class="mine-download download-answer-sheet" (click)="downloadSheet(paper.id)">
+              <span class="download-answer-sheet-icon"></span>
+              <span class="download-text">下载答题卡</span>
+            </span> -->
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div [hidden]='!isEmpty' class='no-resource'>
+    <img src="/assets/imgs/empty.png" alt="暂无资源" />
+  </div>
+
+  <div [hidden]="!isShow">
+    <app-pagination (onSelectPage)="onSelectPage($event)"></app-pagination>
+  </div>
+</div>
+<app-loading-spinner></app-loading-spinner>
+<!--<div *ngIf="isShowDownloadPaper">-->
+  <!--<app-paper-download-->
+    <!--[entryType]="entryType"-->
+    <!--(isCloseDownloadPaper)="isCloseDownloadPaper($event)">-->
+  <!--</app-paper-download>-->
+<!--</div>-->

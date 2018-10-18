@@ -1,0 +1,80 @@
+<nav>
+  <div class="navigation">
+    <div class="current" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+      <span class="current-subject">当前教材：{{currentSubject}}</span>
+      <img src="assets/imgs/down.png" alt="下拉" />
+    </div>
+
+    <ul class="list">
+      <li [ngStyle]="{ 'background': paperBackground }" (click)="checked(1)">套卷</li>
+      <!-- <li [ngStyle]="{ 'background': syncPaperBackground }" (click)="checked(3)">同步试卷</li> -->
+      <li [ngStyle]="{ 'background': minePaperBackground }" (click)="checked(2)">我的组卷</li>
+    </ul>
+    <div class="home-return" (click)="return()">返回&nbsp;></div>
+
+    <div class="menu" [hidden]="!isShowMenu" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+      <span class="stage primary">小学：</span>
+      <ul class="primary-school">
+        <li *ngFor="let course of courses">
+          <a *ngIf="isSearchModel" routerLink="{{keyword}}/{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 3" class="subject" [class.selected]="course === selectedPrimaryCourse" (click)="selectPrimary(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 2" routerLink="{{course.id}}/{{defaultGradeId}}/-1/1">
+            <span *ngIf="course.phase == 3" class="subject" [class.selected]="course === selectedPrimaryCourse" (click)="selectPrimary(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 1" routerLink="{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 3" class="subject" [class.selected]="course === selectedPrimaryCourse" (click)="selectPrimary(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink="{{course.id}}/{{defaultGradeId}}/0/-1/1">
+            <span *ngIf="course.phase == 3" class="subject" [class.selected]="course === selectedPrimaryCourse" (click)="selectPrimary(course)">{{course.name}}</span>
+          </a>
+        </li>
+      </ul>
+
+      <span class="stage junior">初中：</span>
+      <ul class="junior-high-school">
+        <li *ngFor="let course of courses">
+          <a *ngIf="isSearchModel" routerLink="{{keyword}}/{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 1" class="subject" [class.selected]="course === selectedJuniorCourse" (click)="selectJunior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 2" routerLink="{{course.id}}/{{defaultGradeId}}/-1/1">
+            <span *ngIf="course.phase == 1" class="subject" [class.selected]="course === selectedJuniorCourse" (click)="selectJunior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 1" routerLink="{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 1" class="subject" [class.selected]="course === selectedJuniorCourse" (click)="selectJunior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink="{{course.id}}/{{defaultGradeId}}/0/-1/1">
+            <span *ngIf="course.phase == 1" class="subject" [class.selected]="course === selectedJuniorCourse" (click)="selectJunior(course)">{{course.name}}</span>
+          </a>
+        </li>
+      </ul>
+
+      <span class="stage junior">高中：</span>
+      <ul class="senior-middle-school">
+        <li *ngFor="let course of courses">
+          <a *ngIf="isSearchModel" routerLink="{{keyword}}/{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 2" class="subject" [class.selected]="course === selectedSeniorCourse" (click)="selectSenior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 2" routerLink="{{course.id}}/{{defaultGradeId}}/-1/1">
+            <span *ngIf="course.phase == 2" class="subject" [class.selected]="course === selectedSeniorCourse" (click)="selectSenior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 1" routerLink="{{course.id}}/{{defaultGradeId}}/1/-1/1">
+            <span *ngIf="course.phase == 2" class="subject" [class.selected]="course === selectedSeniorCourse" (click)="selectSenior(course)">{{course.name}}</span>
+          </a>
+
+          <a *ngIf="!isSearchModel && isClickMinePaper === 3" routerLink="{{course.id}}/{{defaultGradeId}}/0/-1/1">
+            <span *ngIf="course.phase == 2" class="subject" [class.selected]="course === selectedSeniorCourse" (click)="selectSenior(course)">{{course.name}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

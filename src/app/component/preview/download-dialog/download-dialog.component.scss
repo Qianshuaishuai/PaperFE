@@ -1,0 +1,61 @@
+$primary: #2d9fff;
+
+.download-dialog {
+  width: 440px;
+  background-color: #fff;
+  position: fixed;
+  left: 50%;
+  margin-left: -220px;
+  top: 50%;
+  margin-top: -75px;
+  .download-header {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 22px;
+    color: #fff;
+    background: $primary;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    span {
+      margin-left: 48px;
+    }
+    img {
+      float: right;
+      cursor: pointer;
+      margin: 8px 14px 0 0;
+      &:hover {
+        animation: rotate .5s;
+        -webkit-animation: rotate .5s;
+        -moz-animation: rotate .5s;
+        -o-animation: rotate .5s;
+      }
+    }
+  }
+  .download-section {
+    height: 50px;
+    line-height: 50px;
+    font-size: 14px;
+    color: #272727;
+    margin-top: 50px;
+    padding-left: 30px;
+  }
+  .download-selection {
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    div {
+      width: 100px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      border: 1px solid $primary;
+      border-radius: 4px;
+      color: $primary;
+      margin-bottom: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+}

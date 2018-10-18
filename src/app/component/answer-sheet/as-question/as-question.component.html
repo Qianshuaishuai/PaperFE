@@ -1,0 +1,157 @@
+<!-- 大题 -->
+<section class="question"
+  [style.height.mm]="question.height">
+  <!-- 大题标题 -->
+  <textarea *ngIf="question.isFirstPart"
+    spellcheck="false"
+    (blur)="onQuestionTitleChange()"
+    [(ngModel)]="questionTitle"
+    class="questionHeader">{{questionTitle}}</textarea>
+  <!-- 答题区 -->
+  <div class="answerZone"
+    [style.border]="question.isMark ? '1px solid black' : ''"
+    [style.height]="question.isFirstPart ? 'calc(100% - 6mm)' : '100%'">
+    <!-- 选择题答题区 -->
+    <div *ngIf="question.isMark; else nonMark" class="markZone">
+      <!-- 大行 -->
+      <div *ngFor="let subQuestion of question.subQuestions"
+        class="markContainer">
+        <!-- 小列 -->
+        <ul *ngFor="let markGroup of subQuestion.markGroups"
+          [style.width.mm]="markGroup.width"
+          [style.height.mm]="markGroup.height"
+          class="markGroup">
+          <!-- 小题 -->
+          <li *ngFor="let markSubQuestion of markGroup.markSubQuestions"
+            class="markItem">
+            <b>{{markSubQuestion.index}}</b>
+            <div *ngFor="let option of markSubQuestion | generateOptions" class="markOption">[<span>{{option}}</span>]</div>
+          </li>
+        </ul>
+      </div>
+      <!-- 设置每列行数 -->
+      <div data-html2canvas-ignore
+        title="设置每列行数"
+        (click)="onShowGroupCapacitySetting()"
+        class="setGroupCapacity fa fa-bars">
+      </div>
+      <!-- 添加小题 -->
+      <div data-html2canvas-ignore
+        *ngIf="!isDownloadMode"
+        title="添加题目"
+        (click)="onAddMarkQuestion()"
+        class="addMarkQuestion fa fa-plus">
+      </div>
+      <!-- 删除选择题 -->
+      <div data-html2canvas-ignore
+        *ngIf="!isDownloadMode"
+        title="删除"
+        (click)="onRemoveMarkQuestion()"
+        class="removeMarkQuestion fa fa-times">
+      </div>
+    </div>
+    <!-- 非选择题答题区 -->
+    <ng-template #nonMark>
+      <div *ngFor="let subQuestion of question.subQuestions; index as i"
+        [style.height.mm]="subQuestion.height"
+        mwlResizable
+        [enableGhostResize]="true"
+        [resizeCursorPrecision]="0"
+        [validateResize]="validateResize"
+        (resizeEnd)="onResizeEnd($event, i)"
+        class="nonMarkSubQuestion">
+        <!-- 编辑框 -->
+        <div contenteditable="true"
+          spellcheck="false"
+          (blur)="onBlur($event, i)"
+          (focus)="onFocus(i)"
+          class="answerZoneEditor"
+          [style.height]="isComposition(subQuestion.type) ? '' : '100%'"
+          title="点击进行编辑">
+          <div *ngIf="subQuestion.content.length !== 0; else default" [innerHTML]="showInnerHtml(i) | safe:'html'"></div>
+          <ng-template #default>
+            <div [ngSwitch]="subQuestion.type | typeToType">
+              <!-- 解答题 -->
+              <p *ngSwitchDefault class="content">
+                <span *ngIf="subQuestion.isFirstPart">{{subQuestion.index}}. </span>
+              </p>
+              <!-- 填空题 -->
+              <ng-container *ngSwitchCase="'fillIn'">
+                <p *ngIf="subQuestion.isFirstPart" class="content">
+                  <span class="index">{{subQuestion.index}}. </span>
+                  <ng-container *ngFor="let blank of subQuestion.blankCount | countToArray: 0">
+                    <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>&nbsp;
+                  </ng-container>
+                </p>
+              </ng-container>
+              <!-- 英语作文题号 -->
+              <ng-container *ngSwitchCase="'englishComposition'">
+                <p *ngIf="question.isFirstPart" class="compositionContent">
+                  <span>{{subQuestion.index}}. </span>
+                </p>
+              </ng-container>
+              <!-- 语文作文题号 -->
+              <ng-container *ngSwitchCase="'chineseComposition'">
+                <p *ngIf="question.isFirstPart" class="compositionContent">
+                  <span>{{subQuestion.index}}. </span>
+                </p>
+              </ng-container>
+            </div>
+          </ng-template>
+        </div>
+        <!-- 英语作文横线 -->
+        <ng-container *ngIf="isEnglishComposition(subQuestion.type)">
+          <p *ngFor="let line of subQuestion.lineCount | countToArray: 0; index as i"
+            class="content englishUnderline">
+          </p>
+        </ng-container>
+        <!-- 作文框 -->
+        <div *ngIf="isChineseComposition(subQuestion.type)" class="compositionContainer">
+          <!-- 作文格 -->
+          <div *ngFor="let count of subQuestion.gridCount | countToArray: subQuestion.deltaCount"
+            class="compositionGrid">
+            <span *ngIf="count % 100 === 0"
+              class="countMark">{{count}}</span>
+          </div>
+        </div>
+        <!-- 作文设置 -->
+        <div data-html2canvas-ignore
+          *ngIf="isComposition(subQuestion.type)"
+          title="题目设置"
+          (click)="onSetComposition()"
+          class="setComposition fa fa-bars">
+        </div>
+        <!-- 添加小题 -->
+        <div data-html2canvas-ignore
+          *ngIf="!isDownloadMode && !isComposition(subQuestion.type)"
+          title="添加题目"
+          (click)="onAddSubQuestion()"
+          class="addSubQuestion fa fa-plus">
+        </div>
+        <!-- 删除小题 -->
+        <div data-html2canvas-ignore
+          *ngIf="!isDownloadMode"
+          title="删除"
+          (click)="onRemoveSubQuestion(i)"
+          class="removeSubQuestion fa fa-times">
+        </div>
+        <!-- 题号提示 -->
+        <div data-html2canvas-ignore
+          *ngIf="!isComposition(subQuestion.type)"
+          class="questionIndex">
+          <p>[第<span>{{subQuestion.index}}</span>题]</p>
+        </div>
+        <!-- 调整高度 -->
+        <div data-html2canvas-ignore
+          *ngIf="!isComposition(subQuestion.type)"
+          mwlResizeHandle
+          [resizeEdges]="{bottom: true, right: false, top: false, left: false}"
+          title="拖动鼠标调整高度"
+          class="drag">
+          <i class="common-icons as-drag noHover"></i>
+          <i class="common-icons as-drag-hover hover"></i>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</section>

@@ -1,0 +1,176 @@
+.question-blank-insert-div {
+  text-align: right;
+  border-width: 0px;
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: -15px;
+  position: absolute;
+  right: 20px;
+  bottom: 31px;
+}
+
+.question-blank-insert {
+  width: 96px;
+  height: 28px;
+  background-color: #2d9fff;
+  color: white;
+  font-size: 14px;
+  border-width: 0px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.question-content-div {
+  padding-bottom: 5px;
+  width: 1098px;
+}
+
+.question-content {
+  width: 100%;
+  margin-right: 96px;
+  min-height: 30px;
+  border-width: 0px;
+  padding: 5px 0 0 10px;
+  margin-top: -5px;
+  word-wrap: break-word;
+  outline: 0px;
+  z-index: 2;
+  background: transparent;
+}
+
+.question-content-tip {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  z-index: 1;
+  color: gray;
+}
+
+.question-answer-tip {
+  color: gray;
+}
+
+.question-answer-item {
+  border-width: 0px;
+  margin: 0;
+  display: flex;
+}
+
+.question-answer-item span {
+  display: block;
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.question-answer-item img {
+  width: 24px;
+  height: 24px;
+  margin: auto 0 5px 20px;
+  border: none;
+}
+
+// base question style
+/* 共有样式 */
+
+.question-base-div {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #d9d9d9;
+}
+
+.question-tip-content {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  color: #272727;
+}
+
+.option-text {
+  display: inline-block;
+  width: 1017px;
+  font-size: 14px;
+  min-height: 9px;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  resize: none;
+}
+
+label {
+  font-size: 16px;
+  padding: 0 3px;
+  background: #ffffff;
+}
+
+span {
+  width: 18px;
+  text-align: center;
+}
+
+/* 题干样式 */
+
+.question-content-div {
+  display: flex;
+  padding-left: 10px;
+}
+
+.question-content-div textarea {
+  flex: 1;
+  border-width: 0px;
+}
+
+/* 选项样式 */
+
+.question-options-div {}
+
+.question-options-item {
+  border-width: 0px;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.question-options-item span {
+  display: block;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.question-options-item img {
+  width: 24px;
+  height: 24px;
+  margin: auto 0 5px 10px;
+  border: none;
+}
+
+.question-options-item-add {
+  width: 98px;
+  height: 27px;
+  display: block;
+  margin-left: 28px;
+}
+
+.blank-question-content {
+  margin-left: -3px;
+}
+
+/* 答案样式 */
+
+.question-answer-div {
+  width: 1088px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  min-height: 40px;
+}
+
+.delete-blank-option {
+  position: relative;
+  top: 17px;
+  left: 8px;
+  cursor: pointer;
+}
+
+.warn-border {
+  border-color: red !important;
+  transition: 200ms;
+}

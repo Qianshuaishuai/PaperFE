@@ -1,0 +1,25 @@
+<div class="dangerZone">
+  <div class="pointContainer">
+    <div class="dangerZoneLocatePoint"
+      [style.margin-left.mm]="isThreeCol ? 52 : 82"></div>
+    <div [style.border-top]="borderTop_Up"
+      [style.border-right]="borderRight_Up"
+      [style.border-bottom]="borderBottom_Up"
+      [style.border-left]="borderLeft_Up"
+      class="color"></div>
+  </div>
+  <div *ngIf="isSetNoAnswerArea"
+    [style.height.mm]="noAnswerAreaHeight"
+    class="noAnswerZone">
+    <p>
+      请勿在此区域作答
+      <br>
+      或者做任何标记
+    </p>
+    <div [style.border-top]="borderTop_Down"
+      [style.border-right]="borderRight_Down"
+      [style.border-bottom]="borderBottom_Down"
+      [style.border-left]="borderLeft_Down"
+      class="color"></div>
+  </div>
+</div>

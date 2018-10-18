@@ -1,0 +1,248 @@
+/* 模拟问题 */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.question {
+  width: 100%;
+
+  .questionHeader {
+    resize: none;
+    font-family: serif;
+    font-weight: bold;
+    overflow: hidden;
+    border: none;
+    font-size: 3mm;
+    line-height: 5mm;
+    height: 6mm;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1mm 2mm 0;
+    white-space: pre-wrap;
+    display: block;
+  }
+
+  .answerZone {
+    box-sizing: border-box;
+    border-top: 1px solid black;
+    width: 100%;
+    height: 100%;
+
+    .markZone {
+      position: relative;
+
+      .setGroupCapacity,
+      .addMarkQuestion,
+      .removeMarkQuestion {
+        cursor: pointer;
+        display: none;
+        color: grey;
+        background-color: #f0f0f0;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        font-size: 20px;
+        line-height: 25px;
+        text-align: center;
+      }
+      &:hover .setGroupCapacity,
+      &:hover .addMarkQuestion,
+      &:hover .removeMarkQuestion {
+        display: block;
+      }
+
+      .setGroupCapacity {
+        top: -1px;
+        right: -26px;
+        &:hover {
+          color: #2D9FFF;
+        }
+      }
+
+      .addMarkQuestion {
+        top: 25px;
+        right: -26px;
+        &:hover {
+          color: #2D9FFF;
+        }
+      }
+
+      .removeMarkQuestion {
+        top: 50px;
+        right: -26px;
+        &:hover {
+          color: red;
+        }
+      }
+    }
+
+    .markContainer {
+      display: flex;
+    }
+
+    .markGroup {
+      list-style-type: none;
+      box-sizing: border-box;
+      padding-top: 2mm;
+      text-align: center;
+      font-size: 3mm;
+      font-family: '新罗马',"Times New Roman",'宋体',SimSun-ExtB,SimSun,NSimSun,serif,'STSong';
+    }
+
+    .markItem {
+      padding-top: 1mm;
+      display: flex;
+
+      b {
+        display: block;
+        float: left;
+        text-align: right;
+        width: 8mm;
+        padding-right: 4px;
+      }
+
+      span {
+        display: inline-block;
+        width: 10px;
+      }
+
+      .markOption {
+        display: inline-block;
+        width: 6mm;
+      }
+    }
+
+    .nonMarkSubQuestion {
+      box-sizing: border-box;
+      margin-top: -1px;
+      width: 100%;
+      border: 1px solid black;
+      position: relative;
+
+      .questionIndex {
+        position: absolute;
+        z-index: 1;
+        right: 14mm;
+        bottom: 0mm;
+        color: red;
+        font-size: 16px;
+        font-weight: bold;
+        word-break: break-all;
+      }
+
+      .compositionContainer {
+        margin: 0 auto;
+        width: calc(100% - 3.5mm);
+        display: flex;
+        flex-wrap: wrap;
+        .compositionGrid {
+          width: 7.5mm;
+          height: 7.5mm;
+          border: 0.25mm solid black;
+          margin-top: 2mm;
+          position: relative;
+          .countMark {
+            position: absolute;
+            top: 7mm;
+            left: 0;
+          }
+        }
+      }
+
+      .addSubQuestion,
+      .setComposition,
+      .removeSubQuestion {
+        cursor: pointer;
+        display: none;
+        color: grey;
+        background-color: #f0f0f0;
+        width: 25px;
+        height: 25px;
+        position: absolute;
+        font-size: 16px;
+        line-height: 25px;
+        text-align: center;
+      }
+
+      &:hover .addSubQuestion,
+      &:hover .setComposition,
+      &:hover .removeSubQuestion {
+        display: block;
+      }
+
+      .addSubQuestion,
+      .setComposition {
+        top: -1px;
+        right: -26px;
+        &:hover {
+          color: #2D9FFF;
+        }
+      }
+
+      .removeSubQuestion {
+        top: 25px;
+        right: -26px;
+        &:hover {
+          color: red;
+        }
+      }
+
+      .drag {
+        display: none;
+        position: absolute;
+        right: 1px;
+        bottom: 1px;
+        width: 20px;
+        height: 29px;
+
+        .noHover, &:hover .hover {
+          display: block;
+        }
+
+        &:hover .noHover, .hover {
+          display: none;
+        }
+      }
+
+      &:hover .drag {
+        display: block;
+      }
+
+      .content {
+        font-size: 10px;
+        line-height: 10mm;
+        margin: 0 auto;
+        width: calc(100% - 20px);
+      }
+
+      .compositionContent {
+        display: block;
+        font-size: 10px;
+        line-height: 5mm;
+        margin: 0 auto;
+        height: 5mm;
+        width: calc(100% - 20px);
+      }
+
+      .index {
+        text-decoration: none;
+      }
+
+      .underline {
+        margin: -1px auto 0;
+        text-decoration: underline;
+      }
+
+      .englishUnderline {
+        height: 10mm;
+        margin: -1px auto 0;
+        border-bottom: 1px solid black;
+      }
+    }
+
+    .answerZoneEditor {
+      overflow: hidden;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<div class="page">
+  <a>
+    <span *ngIf="currentPage !== 1" class="number jump-number" (click)="clickPreviousPage()">上一页</span>
+  </a>
+  <div *ngFor="let pageNumber of pageNumbers" class="pageNumber">
+    <a>
+      <span (click)="selectPageNumber(pageNumber)" [class.selectedPageNumber]="pageNumber === currentPage" class="number">{{pageNumber}}</span>
+    </a>
+  </div>
+  <a>
+    <span *ngIf="totalPage !== currentPage" class="number jump-number" (click)="clickNextPage()">下一页</span>
+  </a>
+  <input maxlength="3" [(ngModel)]="jumpPage" class="text" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+  <a>
+    <span class="number jump-number jump" (click)="jump()">跳转</span>
+  </a>
+</div>

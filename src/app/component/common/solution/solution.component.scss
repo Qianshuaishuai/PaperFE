@@ -1,0 +1,64 @@
+.ana-list {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-top: 1px dashed #e5e5e5;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.ana-list span {
+  font-size: 14px;
+}
+
+.ana-list:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.ana-list > span:first-child {
+  position: relative;
+  color: #333;
+  font-weight: 400;
+  width: 70px;
+  padding-left: 25px;
+  font-size: 14px;
+}
+
+.ana-list .solution-number {
+  width: 20px;
+  text-align: center;
+}
+
+.ana-list > span:first-child:before {
+  content: "";
+    display: inline-block;
+    position: absolute;
+    left: 5px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid #ffbd55;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+.ana-list > div {
+  padding-left: 32px;
+}
+
+.infordot {
+  background: #2d9fff;
+  font-size: 12px!important;
+  color: #fff;
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin-right: 2%;
+  white-space: nowrap;
+  margin-top: 3px;
+}
+
+.ana-keypoint {
+  padding-left: 100px !important;
+  position: relative;
+  top: -3px;
+}

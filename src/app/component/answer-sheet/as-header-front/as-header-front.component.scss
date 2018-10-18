@@ -1,0 +1,39 @@
+/* 标题 */
+
+$headerBdColor: rgb(169, 169, 169);
+
+.answerSheetHeader {
+  width: calc(100% - 2mm);
+  height: 18mm;
+  overflow: hidden;
+  position: relative;
+
+  .headerEditor {
+    box-sizing: border-box;
+    padding: 0mm 1mm;
+    font-family: 宋体, SimSun, STSong;
+    overflow: hidden;
+    resize: none;
+    font-size: 5.8mm;
+    width: 100%;
+    font-weight: bold;
+    height: 15mm;
+    max-height: 21mm;
+    text-align: center;
+    word-break: break-all;
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .border {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 15mm;
+    border: 1px solid $headerBdColor;
+  }
+}

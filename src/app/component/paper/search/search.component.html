@@ -1,0 +1,8 @@
+<div class="search" [hidden]="isClickMinePaper !== 1">
+    <input class="input" id="input" name="input" type="text"
+    [(ngModel)]="keyword" placeholder="试卷搜索"
+    (keyup.enter)="search()" maxlength="30"/>
+    <input type="submit" title="搜索" (click)="search()"/>
+    <input type="button" title="删除" [hidden]="!isSearchModel" (click)="exitSearch()"/>
+    <!-- <input type="submit" title="搜索" [routerLink]="['/library', {outlets: {'list': [keyword]}}]"/> -->
+</div>

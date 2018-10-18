@@ -1,0 +1,606 @@
+<div class="container clearfix">
+  <!-- logo title -->
+  <header class="preview-header clearfix">
+    <div class="title">
+      <span>编辑试卷</span>
+      <div class="score-question-count">
+        <span>总分：{{allScoreCount}} 分</span>
+        <span>&nbsp;&nbsp;题数：{{allQuestionCount}} 道</span>
+      </div>
+      <!-- <span class="return" (click)="return()">返回</span> -->
+      <a class="pre_close" (click)="return()">
+        <i class="common-icons close-preview-icon"></i>关闭预览</a>
+      <a class="pre_save" (click)="savePaper()">
+        <i class="common-icons save-paper-icon"></i>保存试卷</a>
+      <a class="pre_analysis" (click)="isShowAnalysis = true">
+        <i class="common-icons analysis-icon"></i>
+        试卷分析
+      </a>
+      <div *ngIf="isShowAnalysis">
+        <app-paper-analysis
+          (isCloseAnalysis)="isCloseAnalysis($event)"
+          [allScoreCount]="allScoreCount"
+          [allQuestionCount]="allQuestionCount"
+          [paperQuestionSetChapters]="paperQuestionSetChapters">
+        </app-paper-analysis>
+      </div>
+    </div>
+  </header>
+
+  <div [hidden]="isLoading"></div>
+
+  <!-- main -->
+  <div class="main clearfix">
+
+    <!-- paper statistics -->
+    <div class="paper-statistics clearfix">
+      <!-- tab -->
+      <ul class="paper-statistics_tab">
+        <li class="pre-edit" [class.tabActive]="tabActive === 1 || tabActive === 4" (click)="switchTag(4)">编辑</li>
+        <li class="pre-sort" [class.tabActive]="tabActive === 2" (click)="switchTag(2)">题目顺序</li>
+        <li class="pre-style" [class.tabActive]="tabActive === 3" (click)="switchTag(3)">试卷样式</li>
+      </ul>
+      <!-- edit -->
+      <div *ngIf="tabEditActive && tabEditStatus === 1" class="unselect-edit-option">
+        <div class="unselect-edit-img"></div>
+        <span class="unselect-edit-text">选择题目或题型进行编辑</span>
+      </div>
+      <div *ngIf="tabEditActive && tabEditStatus === 2" class="pre-edit-content">
+        <dd class="edit-range clearfix">
+          <ul class="edit-range-option">
+            <li class="clearfix" (click)="showEditDialog(1)">
+              <i class="common-icons edit-question-icon"></i>
+              <a>编辑试题</a>
+            </li>
+            <li *ngIf="isShowChangeType" class="clearfix" (click)="showEditDialog(2)">
+              <i class="common-icons change-type-icon"></i>
+              <a>改变题型</a>
+            </li>
+          </ul>
+        </dd>
+      </div>
+      <!-- title edit -->
+      <div *ngIf="tabEditActive && tabEditStatus === 3" class="pre-edit-wrap">
+        <dd class="edit-range pre-edit-title-content clearfix">
+          <div class="edit-topicSet" (click)="isShowSubEdit = false">
+            <!-- ngForm -->
+            <form>
+              <div class="mod">
+                <div class="fl left">标题</div>
+                <input #editChapterName [value]="chapterScore.name" class="input-1" name="sectionName" type="text">
+              </div>
+              <div class="mod">
+                <div class="fl left">描述</div>
+                <textarea *ngIf="chapterScore.detail" #editChapterDetail [value]="chapterScore.detail" class="textarea-1" type="text"></textarea>
+                <textarea *ngIf="!chapterScore.detail" #editChapterDetail [value]="'共 ' + chapterScore.questionCount + ' 题，共 ' + (chapterScore.presetScore) + ' 分'" class="textarea-1" type="text"></textarea>
+              </div>
+              <div class="mod clearfix">
+                <div class="fl left">总分</div>
+                <div class="input-2 fl edit-score-count">
+                  <!-- input 一级题目分数 -->
+                  <input autocomplete="off"
+                  onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode))"
+                  [(ngModel)]="chapterScore.presetScore" type="text"
+                  maxlength="3"
+                  #chapter
+                  name="chapterScore">
+                  <span class="fr edit-score-num">分</span>
+                </div>
+                <a class="cho fl" href="javascript:void(0);"
+                  style="border: 1px solid #2d9fff;color: #2d9fff;padding: 3px;text-align: center;border-radius: 3px;font-size: 12px"
+                  (click)="equalDivision(chapter.value)">平均分配</a>
+              </div>
+              <div class="mod clearfix">
+                <ul class="clearfix">
+                  <!-- level one -->
+                  <li *ngFor="let questionScore of chapterScore.questionsContent; index as questionNumber" class="little-question-li clearfix">
+                    <div *ngIf="questionScore.questions"
+                      class="edit-spread-bottom common-icons"
+                      [ngClass]="((questionScore.questions[0].id === isHiddenSubEditId) && isShowSubEdit) ? 'take-up-icon' : 'drop-down-icon'"
+                      (click)="showSubEdit($event, questionScore.questions[0].id)"></div>
+                    <div class="fl num">{{questionNumber + 1}}.</div>
+                    <div [id]="'questionScore' + questionScore.id" class="input-2 fl edit-input-div">
+                      <input class="edit-input"
+                        [value]="questionScore.score"
+                        autocomplete="off"
+                        maxlength="3"
+                        name="questionScore"
+                        onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+                        type="text"
+                        #question
+                        (blur)="questionBlur(questionNumber, question.value)"/><span>分</span>
+                    </div>
+                    <!-- level two -->
+                    <div (click)="clickStopPropagation($event)" class="edit-level-two-range clearfix hidden" *ngIf="questionScore.questions" [class.showActive]="(questionScore.questions[0].id === isHiddenSubEditId) && isShowSubEdit">
+                      <div class="edit-level-two clearfix" *ngFor="let questionsScore of questionScore.questions; index as questionsNumber">
+                        <div class="fl num">（{{questionsNumber + 1}}）</div>
+                        <div class="input-2 fl edit-input-div">
+                          <input class="edit-input"
+                            autocomplete="off"
+                            maxlength="3"
+                            [value]="questionsScore.score"
+                            name="questionsScore"
+                            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+                            #questions
+                            (blur)="questionsBlur(questionNumber, questionsNumber, questions.value)"
+                            type="text" /><span>分</span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </form>
+          </div>
+        </dd>
+        <a class="save-edit" (click)="saveEditQuestion(chapterScore)">保存修改</a>
+      </div>
+
+      <!-- sort -->
+      <div *ngIf="tabActive === 2" class="pre-sort-content">
+        <p class="sort-tips">点击题号定位到题，拖动进行排序</p>
+        <div class="paper-statistics-wrap" [dragula]="'paperQuestionSetChapters'" [dragulaModel]="paperQuestionSetChapters">
+          <div class="paper-statistics-type" *ngFor="let chapter of paperQuestionSetChapters; index as i">
+            <div (click)="chapterAnchor($event, 'chapter' + i)" class="pre-sort-item clearfix">
+              <span>{{utils.matchingNumber(i + 1) + '、' + chapter.name}}：</span>
+              <!-- TODO 跨大题拖动小题后各大题题数及总分及时更新
+              其实dragula的实现是只要是同一个容器（[dragula]的值）里面的元素就可以互相拖动，但是[dragula]的值是形如 "'xx'" 或 '"xx"'，所以改成 "'chapter'"就可以跨大题拖动了
+              但是原来的实现是以下面这个div作为拖动的容器，由于其没占空间，会出现这样的问题：假设把第二大题的小题全都拖到第一大题，第二大题的这个div就空了，小题再也无法拖动回来 -->
+              <!-- <div data-drag="child" [dragula]="'chapter'" [dragulaModel]="chapter.questionsContent">
+                <a data-drag="child" *ngFor="let question of chapter.questionsContent; index as j"
+                  (click)="handleAnchor($event, question.id, j)">
+                  <span data-drag="child" class="question-item-drag">{{question.number}}</span>
+                </a>
+              </div> -->
+              <!-- 解决方案一：给作为容器的div设置最小宽高，可以解决问题，但是拖动时体验很怪 -->
+              <!-- [dragula]="'chapter'" 大题间可拖动 -->
+              <div [dragula]="chapter" [dragulaModel]="chapter.questionsContent" class="questionContainer">
+                <a data-drag="child" *ngFor="let question of chapter.questionsContent; index as j" (click)="handleAnchor($event, question.id, j, question, chapter.name)">
+                  <span data-drag="child" class="question-item-drag">{{question.number}}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- 结构样式 -->
+      <div *ngIf="tabActive === 3" class="pre-style-content">
+        <dd>
+          <ul class="clearfix structure-option">
+            <li (click)="showStructure([0, 1, 2, 3, 4, 6, 7])">
+              <i class="common-icons default-structure-icon"></i>
+              <a>默认结构</a>
+            </li>
+            <li (click)="showStructure([0, 1, 2, 4, 7, 8, 9])">
+              <i class="common-icons standard-structure-icon"></i>
+              <a>标准结构</a>
+            </li>
+            <li (click)="showStructure([0, 5])">
+              <i class="common-icons exam-structure-icon"></i>
+              <a>测验结构</a>
+            </li>
+            <li (click)="showStructure([0])">
+              <i class="common-icons homework-structure-icon"></i>
+              <a>作业结构</a>
+            </li>
+          </ul>
+        </dd>
+        <p class="custom-tag">自定义结构</p>
+        <ul class="custom">
+          <li>
+            <a (click)="showStructureStyle[0] = !showStructureStyle[0]">
+              <i class="common-icons" [ngClass]="showStructureStyle[0] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              主标题</a>
+          </li>
+          <li>
+            <a (click)="showStructureStyle[1] = !showStructureStyle[1]">
+                <i class="common-icons" [ngClass]="showStructureStyle[1] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              副标题</a>
+          </li>
+          <!-- <li>
+            <a (click)="showStructureStyle[2] = !showStructureStyle[2]">
+              <i class="common-icons" [ngClass]="showStructureStyle[2] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              装订线</a>
+          </li> -->
+          <li>
+            <a (click)="showStructureStyle[3] = !showStructureStyle[3]">
+              <i class="common-icons" [ngClass]="showStructureStyle[3] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              保密标记</a>
+          </li>
+          <li>
+            <a (click)="showStructureStyle[4] = !showStructureStyle[4]">
+              <i class="common-icons" [ngClass]="showStructureStyle[4] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              试卷信息栏</a>
+          </li>
+          <li>
+            <a (click)="showStructureStyle[5] = !showStructureStyle[5]">
+              <i class="common-icons" [ngClass]="showStructureStyle[5] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              考生输入栏</a>
+          </li>
+          <li>
+            <a (click)="showStructureStyle[6] = !showStructureStyle[6]">
+              <i class="common-icons" [ngClass]="showStructureStyle[6] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              誉分栏</a>
+          </li>
+          <li>
+            <a (click)="showStructureStyle[7] = !showStructureStyle[7]">
+              <i class="common-icons" [ngClass]="showStructureStyle[7] ? 'selected-structure-icon' : 'unselect-structure-icon'"></i>
+              注意事项栏</a>
+          </li>
+          <li *ngIf="!showStructureStyle[8] && !showStructureStyle[9]">
+            <a (click)="showPaperLabel()">
+              <i class="common-icons unselect-structure-icon"></i>
+              卷标卷注</a>
+          </li>
+          <li *ngIf="showStructureStyle[8] || showStructureStyle[9]">
+            <a (click)="showStructureStyle[8] = false; showStructureStyle[9] = false">
+              <i class="common-icons selected-structure-icon"></i>
+              卷标卷注</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <!-- paper statistics end -->
+
+    <!-- paper content -->
+    <div class="paper-questions clearfix" #questionScroll>
+      <!-- 装订线 -->
+      <div class="pane">
+        <!-- <div *ngIf="showStructureStyle[2]" class="sep-line">
+        </div> -->
+      </div>
+      <div class="content-right" id="paperContent">
+        <!-- 保密标记 -->
+        <div (click)="clickStructure(3)"
+          [class.clickStatus]="clickStatus === 3"
+          (blur)="validateStructure($event)"
+          #paperMarking
+          *ngIf="showStructureStyle[3]"
+          class="paper-marking"
+             id="paperMarking"
+          contenteditable="true">绝密★启用前</div>
+
+        <!-- 主标题 -->
+        <div class="main-title" *ngIf="showStructureStyle[0]">
+          <div id="mainTitle" (click)="clickStructure(0)"
+            [class.clickStatus]="clickStatus === 0"
+            (blur)="validateStructure($event)"
+            #mainTitle
+             id="mainTitle"
+            class="paper-title"
+            contenteditable="plaintext-only">{{title}}</div>
+        </div>
+
+        <!-- 副标题 -->
+        <div (click)="clickStructure(1)"
+          [class.clickStatus]="clickStatus === 1"
+          (blur)="validateStructure($event)"
+          #subTitle
+          *ngIf="showStructureStyle[1]"
+          class="subtitle"
+          contenteditable="plaintext-only"
+          id="subTitle">副标题</div>
+
+        <!-- 试卷信息栏 -->
+        <div (click)="clickStructure(4)"
+          [class.clickStatus]="clickStatus === 4"
+          (blur)="validateStructure($event)"
+          #paperInfo
+          *ngIf="showStructureStyle[4]"
+          class="paper-info"
+          contenteditable="plaintext-only" id="paperInfo">考试范围：xxx；考试时间：100分钟；命题人：xxx</div>
+
+        <!-- 考生输入栏 -->
+        <div (click)="clickStructure(5)"
+          [class.clickStatus]="clickStatus === 5"
+          (blur)="validateStructure($event)"
+          #studentInfo
+          *ngIf="showStructureStyle[5]"
+          class="student-info"
+             id="studentInfo"
+          contenteditable="plaintext-only">学校:___________姓名：___________班级：___________考号：___________</div>
+
+        <!-- 誉分栏 -->
+        <div *ngIf="showStructureStyle[6]" class="count-box" id="countBox">
+          <table style="border: 0; border-spacing: 0; border-collapse: collapse;">
+            <tbody>
+              <tr>
+                <td>题号</td>
+                <td *ngFor="let chapter of paperQuestionSetChapters; index as i" class="counts">{{utils.matchingNumber(i + 1)}}</td>
+                <td>总分</td>
+              </tr>
+              <tr>
+                <td>得分</td>
+                <td *ngFor="let chapter of paperQuestionSetChapters" class="chapter"></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 注意事项栏 -->
+        <div *ngIf="showStructureStyle[7]" class="paper-notice">
+          <p (blur)="validateStructure($event)"
+            (click)="clickStructure(7)"
+            [class.clickStatus]="clickStatus === 7"
+            #paperNotice
+             id="paperNotice"
+             contenteditable="true">注意：本试卷包含Ⅰ、Ⅱ两卷。第Ⅰ卷为选择题，所有答案必须用2B铅笔涂在答题卡中相应的位置。第Ⅱ卷为非选择题，所有答案必须填在答题卷的相应位置。答案写在试卷上均无效，不予记分。</p>
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loading-spinner">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+        <!-- 试卷主体 -->
+        <div class="paper-questions-wrap">
+          <div [id]="'chapter' + chapterIndex" class="paper-questions-content clearfix" *ngFor="let chapter of paperQuestionSetChapters; index as chapterIndex">
+            <!-- 题型 -->
+            <div *ngIf="showStructureStyle[8] && chapter.type <= 10003 && chapterIndex === 0"
+              (click)="clickStructure(8)"
+              [class.clickStatus]="clickStatus === 8"
+              (blur)="validateStructure($event)"
+              #questionLabelOne
+              class="paper-volum-a" contenteditable="true">第I卷（选择题）
+            </div>
+            <div *ngIf="showStructureStyle[9] && chapter.type >= 10004 && chapterIndex === firstQuestionsIndex"
+              (click)="clickStructure(9)"
+              [class.clickStatus]="clickStatus === 9"
+              (blur)="validateStructure($event)"
+              #questionLabelTwo
+              class="paper-volum-a" contenteditable="true">第II卷（非选择题）
+            </div>
+            <div class="question-title" (mouseenter)="mouseEnter(1, chapter.type)" (mouseleave)="mouseLeave()" (click)="editTitle(1, chapter, chapterIndex)">
+              <div *ngIf="!chapter.detail">{{utils.matchingNumber(chapterIndex + 1) + '、' + chapter.name + '（共 ' + chapter.questionCount + ' 题，共 ' + (chapter.presetScore) + ' 分）'}}</div>
+              <div *ngIf="chapter.detail">{{utils.matchingNumber(chapterIndex + 1) + '、' + chapter.name + '(' + chapter.detail + ')'}}</div>
+              <!-- 按题型删除按钮 -->
+              <div [hidden]="isHideChapter(chapter.type)" class="delete-chapter" (click)="deleteQuestions(chapterIndex)">
+                <i class="common-icons delete-question-icon"></i>
+              </div>
+            </div>
+
+            <!-- 题目列表 -->
+            <!-- <div [dragula]="chapter" [dragulaModel]='chapter.questionsContent'> -->
+              <div *ngFor="let question of chapter.questionsContent; index as itemIndex" class="question-item" [class.questionActive]="question.id === questionActive"
+                (mouseenter)="mouseEnter(2, question.id)" (mouseleave)="mouseLeave()" (click)="switchTag(1, question.id, 2, question, chapter.name)">
+                <!-- 按题目删除按钮 -->
+                <div *ngIf="question.id === questionId" class="delete-question-item common-icons delete-question-icon" (click)="deleteQuestion(chapterIndex, question)"></div>
+                <!-- level one -->
+                <div class="question-item-content">
+                  <p class="question-number">{{question.number}}.</p>
+                  <p [innerHTML]="question.content.split('&nbsp;').join(' ') | safe: 'html'" class="question-content"></p>
+                  <div *ngIf="question.questions && question.questions.length; else withoutsubquestions">
+                    <!-- level two -->
+                    <!-- <div *ngFor="let subquestion of question.questions; index as subitem" class="item-level-two" (mouseenter)="mouseEnter(3, subquestion.id)" (mouseleave)="mouseLeave()"> -->
+                    <div *ngFor="let subquestion of question.questions; index as subitem" class="item-level-two">
+                      <p *ngIf="subquestion.options; else serial" [innerHTML]="subquestion.content | safe: 'html'"></p>
+                      <ng-template #serial>
+                        <p [innerHTML]="subquestion.content | safe: 'html'"></p>
+                      </ng-template>
+                      <p style="padding-left: 15px; margin: 0;" *ngFor="let option of subquestion.options;" [innerHtml]="option | safe: 'html'"></p>
+                      <!-- <div class="question-item-tip-content" [hidden]="isHideSubQuestionTip(subquestion.id)">
+                        <div class="question-item-tip question-item-tip-score" (click)="changeSubQuestion(question, subquestion, chapter, item + 1, subitem + 1)">设置分数</div>
+                        <div class="question-item-tip" (click)="showAnalysis(subquestion, chapter.name)">解析</div>
+                      </div> -->
+                    </div>
+                  </div>
+                  <ng-template #withoutsubquestions>
+                    <p *ngFor="let option of question.options;" [innerHtml]="option | safe: 'html'"></p>
+                  </ng-template>
+                </div>
+
+                <!-- tip -->
+                <!--<div class="question-item-little">
+                  <p>{{questionContent.content}}</p>
+                </div>-->
+                <!-- <div class="question-item-tip-content" [hidden]="handleQuestionHidden(question.id)">
+                  <div *ngIf="!(question.questions !== undefined && question.questions.length)" class="question-item-tip question-item-tip-score"
+                    (click)="changeScore(question, chapter, item + 1)">
+                    设置分数
+                  </div>
+                  <div class="question-item-tip" (click)="deleteQuestion(i, question)">删除
+                  </div>
+                  <div *ngIf="!(question.questions !== undefined && question.questions.length)" class="question-item-tip" (click)="showAnalysis(question, chapter.name)">解析
+                  </div>
+                </div> -->
+                <div *ngIf="question.id === questionActive" class="question-tip">
+                  <span *ngIf="solutionTipActive" [class.question-tip-active]="solutionTipActive"
+                    (click)="solutionTipActive = !solutionTipActive; errorTipActive = false">
+                    <i class="common-icons question-analysis-icon-hover"></i>收起
+                  </span>
+                  <span class="show-analysis-icon" *ngIf="!solutionTipActive" [class.question-tip-active]="solutionTipActive"
+                    (click)="solutionTipActive = !solutionTipActive; errorTipActive = false">
+                    <i class="common-icons question-analysis-icon"></i>解析
+                  </span>
+                  <span class="show-correct-icon" [class.question-tip-active]="errorTipActive" (click)="errorTipActive = !errorTipActive; solutionTipActive = false">
+                    <i class="common-icons" [ngClass]="errorTipActive ? 'question-correct-icon-hover' : 'question-correct-icon'"></i>纠错
+                  </span>
+                  <span class="show-insert-icon" (click)="showEditDialog(3)">
+                    <i class="common-icons question-insert-icon"></i>插入试题
+                  </span>
+                </div>
+
+                <!-- solution level one -->
+                <div *ngIf="!isPrintPaper && (!question.questions && question.id === questionActive && solutionTipActive)" class="pre-solution">
+                  <app-solution [level]="'1'" [question]="question"></app-solution>
+                </div>
+
+                <!-- solution level two -->
+                <div *ngIf="!isPrintPaper && (question.questions && question.id === questionActive && solutionTipActive)" class="pre-solution">
+                  <app-solution [level]="'2'" [question]="question"></app-solution>
+                </div>
+
+                <!-- print paper level one -->
+                <div *ngIf="isPrintPaper && !question.questions" class="pre-solution">
+                  <app-solution [level]="'1'" [question]="question"></app-solution>
+                </div>
+                <!-- print paper level two -->
+                <div *ngIf="isPrintPaper && question.questions" class="pre-solution">
+                  <app-solution [level]="'2'" [question]="question"></app-solution>
+                </div>
+
+                <!-- submit error -->
+                <div *ngIf="question.id === questionActive && errorTipActive">
+                  <app-correct [questionId]="question.id"></app-correct>
+                </div>
+
+              </div>
+            <!-- </div> -->
+          </div>
+
+          <!-- paper content end -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- save new paper -->
+  <div class="widget-overlay" *ngIf="isShowSave">
+    <div class="save-paper">
+
+      <div class="save-paper-header">
+        <span>保存组卷</span>
+        <img src="assets/imgs/close.png" alt="close" (click)="isShowSave = !isShowSave">
+      </div>
+
+      <div class="save-paper-content">
+        <div class="save-paper-name">
+          <span>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</span>
+          <input type="text" id="title" [(ngModel)]="title" maxlength="80">
+        </div>
+
+        <div class="save-paper-subject">
+          学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;科：
+          <span>{{stageId | grade}}{{courseId | switchSubject}}</span>
+        </div>
+
+        <div class="save-paper-chapter">
+          <div>教材章节：</div>
+          <div>{{currentBookVersion}}{{currentBookName}}</div>
+          <div class="save-paper-chapter-select" (click)="isShowSwitchChpater = !isShowSwitchChpater">
+            <div>{{currentChapterName}}</div>
+            &nbsp;
+            <img *ngIf="isShowSwitchChpater == false" src="assets/imgs/save_paper_down.png" alt="chapter-select"> &nbsp;
+            <img *ngIf="isShowSwitchChpater == true" src="assets/imgs/save_paper_up.png" alt="chapter-select">
+          </div>
+          <span (click)="isShowSwitch = !isShowSwitch">切换教材</span>
+          <div class="switch-spread" [hidden]="!isShowSwitchChpater" (mouseleave)="isShowSwitchChpater = false">
+            <div *ngFor="let chapter of chapters">
+              <a (click)="handleChapterName(chapter.F_chapter_name, chapter.F_chapter_id); isShowSwitchChpater = !isShowSwitchChpater">{{chapter.F_chapter_name}}</a>
+              <div *ngFor="let chapterNameChildren of chapter.F_chapter_children">
+                <a class="chapter-name" (click)="handleChapterName(chapterNameChildren.F_chapter_name, chapterNameChildren.F_chapter_id); isShowSwitchChpater = !isShowSwitchChpater">{{chapterNameChildren.F_chapter_name}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="save-paper-type">
+          <div class="save-paper-type-title">类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</div>
+          <div class="save-paper-type-content clearfix">
+            <span *ngFor="let type of paperTypes" [class.save-selected]="currentType === type.id" (click)="selectType(type.id)">
+              {{type.name}}
+            </span>
+          </div>
+        </div>
+
+        <div class="save-paper-remark">
+          <span class="save-paper-remark-title">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</span>
+          <textarea name="remark" id="comment" cols="73" rows="6" #textarea maxlength="255"></textarea>
+        </div>
+
+      </div>
+
+      <div class="save-paper-footer">
+        <button type="button" class="save-paper-button-save" (click)="save(textarea.value)">保存</button>
+        <button type="button" class="save-paper-button-cancel" (click)="cancel()">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- switch chpater -->
+  <div class="widget-overlay" [hidden]="!isShowSwitch">
+    <div class="switch-chapter">
+      <div class="switch-chapter-header">
+        <span>切换教材</span>
+        <img src="assets/imgs/close.png" alt="close" (click)="isShowSwitch = !isShowSwitch">
+      </div>
+      <div class="switch-chapter-content">
+        <div class="switch-chapter-content-public">
+          <span>公共教材</span>
+        </div>
+        <table class="table">
+          <tr class="stage">
+            <td class="stage-title">
+              <span>学&nbsp;段：</span>
+            </td>
+            <td class="stage-content">
+              <a class="stage-item" *ngFor="let stage of stageList" [class.selected]="stage.F_stage_id === currentStageId" (click)="handleStage(stage.F_stage_id)">
+                {{stage.F_stage_name}}
+              </a>
+            </td>
+          </tr>
+          <tr class="subject">
+            <td class="subject-title">
+              <span>科&nbsp;目：</span>
+            </td>
+            <td class="subject-content">
+              <a class="subject-item" *ngFor="let subject of subjectList" [class.selected]="subject === currentSubjectId" (click)="handleSubject(subject)">
+                {{subject | mapSubject:stageId | switchSubject}}
+              </a>
+            </td>
+          </tr>
+          <tr class="bookename">
+            <td class="bookename-title">
+              <span>版&nbsp;本：</span>
+            </td>
+            <td class="bookename-content">
+              <a class="bookename-item" [class.selected]="bookename === currentBookVersion" *ngFor="let bookename of bookenameList" (click)="handleBookename(bookename)">
+                {{bookename}}
+              </a>
+            </td>
+          </tr>
+          <tr class="book">
+            <td class="book-title">
+              <span>教&nbsp;材：</span>
+            </td>
+            <td class="book-content">
+              <li class="book-item-li" *ngFor="let book of bookList" (click)="handleBook(book.F_book_id, book.F_book_name)">
+                <a class="book-item" [class.selected]="book.F_book_id === currentBookId">
+                  {{book.F_book_name}}
+                </a>
+              </li>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="switch-chapter-footer">
+        <button class="switch-chapter-button" (click)="complete()">完成</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-dialog></app-dialog>
+<app-message-dialog></app-message-dialog>
+<app-prompt-message></app-prompt-message>
+<div *ngIf="isShowEditDialog">
+  <app-edit-paper
+    [subjectId]="currentSubjectId"
+    [stageId]="stageId"
+    [bookId]="currentBookId"
+    [editCourseId]="editCourseId"
+    [editQuestion]="editQuestion"
+    [editChapterTypeName]="editChapterTypeName"
+    [editType]="editType"
+    (refreshQuestion)="refreshQuestion($event)"
+    (isCloseEditDialog)="isCloseEditDialog($event)"
+  ></app-edit-paper>
+</div>
+<div *ngIf="isShowDownload">
+  <app-download-dialog
+    [savePaperId]="savePaperId"
+    (isCloseDownloadDialog)="isCloseDownloadDialog($event)"
+    (isShowSolutionArea)="isShowSolutionArea($event)"
+  ></app-download-dialog>
+</div>

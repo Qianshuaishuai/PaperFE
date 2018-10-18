@@ -1,0 +1,47 @@
+.dangerZone {
+  margin: 0 0 2mm 0;
+  padding: 0;
+  width: 100%;
+  background: transparent;
+
+  .pointContainer {
+    margin: 0;
+    padding: 0;
+    height: 15mm;
+    position: relative;
+
+    .dangerZoneLocatePoint {
+      margin: 0;
+      padding: 0;
+      width: 8mm;
+      height: 8mm;
+      border: 2mm solid black;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+
+  .noAnswerZone{
+    font-size: 10mm;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    p {
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      position: absolute;
+      z-index: 1;
+    }
+  }
+
+  .color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+  }
+}

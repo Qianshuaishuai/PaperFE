@@ -1,0 +1,44 @@
+.pageIndexContainer {
+  margin: 0;
+  padding: 0;
+  top: 281mm;
+  width: 20mm;
+  height: 5mm;
+  position: absolute;
+
+  .index {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+
+    .white {
+      margin: 0;
+      padding: 0;
+      width: 5mm;
+      height: 5mm;
+      background-color: white;
+      float: left;
+      box-sizing: border-box;
+      border: 2px black solid;
+      position: relative;
+
+      .slash {
+        border-right: 1px solid black;
+        transform: rotate(-44deg);
+        position: absolute;
+        top: -4px;
+        left: 7px;
+        width: 1px;
+        height: 24px;
+      }
+    }
+
+    .black {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border: 2.5mm black solid;
+    }
+  }
+}

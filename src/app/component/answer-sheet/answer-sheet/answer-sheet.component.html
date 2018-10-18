@@ -1,0 +1,73 @@
+<div class="container"
+  [style.width.mm]="answerSheet.isThreeCol ? 140 : 210">
+  <!-- 答题卡 -->
+  <div class="answerSheet"
+    [style.width.mm]="answerSheet.isThreeCol ? 140 : 210">
+    <!-- 超容警告 -->
+    <div *ngIf="isOverflow"
+      class="warning">
+      <p>答题卡内容最多支持2张，请重新调整布局</p>
+    </div>
+    <!-- 定位点 -->
+    <app-as-locate-points
+      [isLeftBorder]="answerSheet.isLeftBorder"
+      [isRightBorder]="answerSheet.isRightBorder"
+      [isThreeCol]="answerSheet.isThreeCol"></app-as-locate-points>
+    <main class="mainContainer"
+      [style.left.mm]="answerSheet.mainLeft"
+      [style.width.mm]="answerSheet.mainWidth">
+      <!-- 标题 -->
+      <!-- 标题正面 -->
+      <app-as-header-front *ngIf="answerSheet.isFirstPage"
+        (overflow)="onOverflow()"
+        (titleChange)="onTitleChange($event)"
+        [isThreeCol]="answerSheet.isThreeCol"
+        [title]="paperTitle"></app-as-header-front>
+      <!-- 禁答区 -->
+      <app-as-danger-zone *ngIf="answerSheet.isDangerZone"
+        [mainWidth]="answerSheet.mainWidth"
+        [isSetNoAnswerArea]="answerSheet.isSetNoAnswerArea"
+        [noAnswerAreaHeight]="answerSheet.noAnswerAreaHeight"
+        [isThreeCol]="answerSheet.isThreeCol"></app-as-danger-zone>
+      <!-- 相关信息及注意事项 -->
+      <div *ngIf="answerSheet.isFirstPage">
+        <!-- 准考证号版 -->
+        <app-as-info-number *ngIf="answerSheet.candidateNumberType; else barCode"
+          (attentionChange)="onAttentionChange($event)"
+          (attentionOverflow)="onAttentionOverflow()"
+          [attention]="attention"
+          [isThreeCol]="answerSheet.isThreeCol"></app-as-info-number>
+        <!-- 条形码版 -->
+        <ng-template #barCode>
+          <app-as-info-barcode
+            (attentionChange)="onAttentionChange($event)"
+            (attentionOverflow)="onAttentionOverflow()"
+            [attention]="attention"
+            [isThreeCol]="answerSheet.isThreeCol"></app-as-info-barcode>
+        </ng-template>
+      </div>
+      <!-- 问题 -->
+      <app-as-question *ngFor="let question of answerSheet.questions"
+        (addMarkQuestion)="onAddMarkQuestion()"
+        (addSubQuestion)="onAddSubQuestion($event)"
+        (autoSave)="onAutoSave($event)"
+        (removeMarkQuestion)="onRemoveMarkQuestion()"
+        (removeSubQuestion)="onRemoveSubQuestion($event)"
+        (resizeSubQuestion)="onResizeSubQuestion($event)"
+        (setComposition)="onSetComposition($event)"
+        (showGroupCapacitySetting)="onShowGroupCapacitySetting($event)"
+        (questionTitleChange)="onQuestionTitleChange($event)"
+        [isDownloadMode]="isDownloadMode"
+        [question]="question"></app-as-question>
+    </main>
+    <!-- 机读页码 -->
+    <app-as-page-index
+      [pageIndex]="answerSheet.pageIndex"
+      [isThreeCol]="answerSheet.isThreeCol"></app-as-page-index>
+    <!-- 人读页码 -->
+    <footer *ngIf="isShowPageIndex"
+      class="pageIndexFont">
+      <p>第<span>{{pageIndex + 1}}</span>页 共<span>{{pageCounts}}</span>页</p>
+    </footer>
+  </div>
+</div>

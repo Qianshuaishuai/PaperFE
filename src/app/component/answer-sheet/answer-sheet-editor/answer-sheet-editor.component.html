@@ -1,0 +1,282 @@
+<app-prompt-message></app-prompt-message>
+<div class="container">
+  <!-- 答题卡 -->
+  <main class="answerSheetListContainer">
+    <div *ngIf="isDownloadMode" class="loading">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+    <app-answer-sheet *ngFor="let answerSheet of answerSheets; index as i"
+      (addMarkQuestion)="onAddMarkQuestion()"
+      (addSubQuestion)="onAddSubQuestion($event)"
+      (attentionChange)="onAttentionChange($event)"
+      (attentionOverflow)="onAttentionOverflow()"
+      (autoSave)="onAutoSave($event)"
+      (overflow)="onOverflow()"
+      (setPageOverflow)="onSetPageOverflow($event)"
+      (questionTitleChange)="onQuestionTitleChange($event)"
+      (removeMarkQuestion)="onRemoveMarkQuestion()"
+      (removeSubQuestion)="onRemoveSubQuestion($event)"
+      (resizeSubQuestion)="onResizeSubQuestion($event)"
+      (setComposition)="onSetComposition($event)"
+      (showGroupCapacitySetting)="onShowGroupCapacitySetting($event)"
+      (titleChange)="onTitleChange($event)"
+      [isDownloadMode]="isDownloadMode"
+      [isShowPageIndex]="isShowPageIndex"
+      [pageIndex]="i"
+      [paperTitle]="paperTitle"
+      [pageCounts]="answerSheets.length"
+      [attention]="attention"
+      [isOverflow]="i / option.col >= 4"
+      [answerSheet]="answerSheet"></app-answer-sheet>
+  </main>
+  <!-- 预览 -->
+  <section [style.display]="showPreview ? 'block' : 'none'"
+    id="previewContainer">
+    <div id="preview"></div>
+    <div class="quitPreview">
+      <img src="/assets/imgs/close.png" (click)="quitPreview()"/>
+    </div>
+  </section>
+  <!-- 设置填涂题每列行数 -->
+  <div *ngIf="isShowGroupCapacitySetting" class="gcSettingContainer">
+    <div class="gcSetting">
+      <header>
+        <img src="/assets/imgs/close.png" (click)="hideGroupCapacitySetting()"/>
+        <h3>设置每列行数</h3>
+      </header>
+      <main>
+        <ul>
+          <li *ngFor="let item of groupCapacityOptions"
+            [class.selected]="groupCapacity === item"
+            (click)="setDisplayedGroupCapacity(item)">{{item}}</li>
+        </ul>
+      </main>
+      <footer>
+        <button class="confirm"
+          (click)="setGroupCapacity()">确定</button>
+        <button class="cancel"
+          (click)="hideGroupCapacitySetting()">取消</button>
+      </footer>
+    </div>
+  </div>
+  <!-- 添加题目 -->
+  <div *ngIf="isShowAddQuestionConfig" class="aqContainer">
+    <div class="addQuestionConfig">
+      <header>
+        <img src="/assets/imgs/close.png" (click)="hideAddQuestionConfig()"/>
+        <h3 *ngIf="isSetComposition; else isAdd">题目设置</h3>
+        <ng-template #isAdd>
+          <h3>添加题目</h3>
+        </ng-template>
+      </header>
+      <main>
+        <p *ngIf="isAddQuestion()">
+          <label for="questionTitle">题目名称：</label>
+          <input type="text" name="questionTitle" id="questionTitle"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addQuestionTitle">
+        </p>
+        <p *ngIf="!isSetComposition">
+          <label for="questionIndexStart">题号：</label>
+          <input type="text" name="questionIndexStart" id="questionIndexStart"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addQuestionIndexStart">
+          <span *ngIf="!isComposition()">
+            <label for="questionIndexEnd" class="endIndexLabel">~</label>
+            <input type="text" name="questionIndexEnd" id="questionIndexEnd"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addQuestionIndexEnd">
+          </span>
+        </p>
+        <!-- 选择题特有 -->
+        <p *ngIf="isMarkQuestion()" class="questionType">
+          <span (click)="setAddQuestionType(10001)">单选题
+            <i [class]="isSingleChoiceQuestion() ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          </span>
+          <span (click)="setAddQuestionType(10002)">多选题
+            <i [class]="isMultiChoiceQuestion() ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          </span>
+          <span (click)="setAddQuestionType(10004)">判断题
+            <i [class]="isJudgementQuestion() ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          </span>
+        </p>
+        <p *ngIf="isMarkQuestion()">
+          <label for="optionCount">选项个数：</label>
+          <input type="text" name="optionCount" id="optionCount"
+            [disabled]="isJudgementQuestion()"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addOptionCount">
+        </p>
+        <!-- 填空题特有 -->
+        <p *ngIf="isFillInQuestion()">
+          <label for="blankCount">每行空数：</label>
+          <input type="text" name="blankCount" id="blankCount"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addBlankCount">
+        </p>
+        <!-- 作文特有 -->
+        <p *ngIf="!isSetComposition && isComposition()" class="compositionType">
+          <span for="chinese" (click)="setAddQuestionType(00000)">语文
+            <i [class]="isChineseComposition() ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          </span>
+          <span for="english" (click)="setAddQuestionType(00001)">英语
+            <i [class]="isEnglishComposition() ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          </span>
+        </p>
+        <p *ngIf="isChineseComposition()">
+          <label for="gridCount">作文格数：</label>
+          <input type="text" name="gridCount" id="gridCount"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addGridCount">
+        </p>
+        <p *ngIf="isEnglishComposition()">
+          <label for="lineCount">作文行数：</label>
+          <input type="text" name="lineCount" id="lineCount"
+            onkeypress="return (/^(\d)$/).test(String.fromCharCode(event.keyCode));"
+            (focus)="clearWarning($event)"
+            [(ngModel)]="addLineCount">
+        </p>
+        <p class="warning"></p>
+      </main>
+      <footer>
+        <button class="confirm"
+          (click)="isSetComposition ? setComposition() : addQuestion()">确定</button>
+        <button class="cancel"
+          (click)="hideAddQuestionConfig()">取消</button>
+      </footer>
+    </div>
+  </div>
+  <!-- 编辑栏 -->
+  <aside class="operationContainer">
+    <button class="returnBut" (click)="returnToLib()"><i class="common-icons close-preview-icon"></i>返回试题库</button>
+    <section id="answerSheetLayoutSetting">
+      <h3 class="sectionHeader">选择答题卡布局</h3>
+      <ul class="selectionList">
+        <li (click)="setOneCol()">
+          <div class="selectionItem">
+            <i class="common-icons as-col1"></i>
+            <div class="layoutSelected" [style.display]="option.col === 1 ? 'block' : 'none'">
+              <i class="common-icons as-col-active"></i>
+            </div>
+            <span>一栏</span>
+          </div>
+        </li>
+        <li (click)="setTwoCol()">
+          <div class="selectionItem">
+            <i class="common-icons as-col2"></i>
+            <div class="layoutSelected" [style.display]="option.col === 2 ? 'block' : 'none'">
+              <i class="common-icons as-col-active"></i>
+            </div>
+            <span>两栏</span>
+          </div>
+        </li>
+        <li (click)="setThreeCol()">
+          <div class="selectionItem">
+            <i class="common-icons as-col3"></i>
+            <div class="layoutSelected" [style.display]="option.col === 3 ? 'block' : 'none'">
+              <i class="common-icons as-col-active"></i>
+            </div>
+            <span>三栏</span>
+          </div>
+        </li>
+      </ul>
+      <p [ngSwitch]="option.col">
+        <span *ngSwitchCase="1">一栏适用于A4、16K、B5纸张</span>
+        <span *ngSwitchCase="2">两栏适用于A3、8K、B4纸张</span>
+        <span *ngSwitchCase="3">三栏适用于A3、8K、B4纸张</span>
+      </p>
+    </section>
+    <section id="candidateNumberStyleSetting">
+      <h3 class="sectionHeader">选择考号版式</h3>
+      <ul>
+        <li (click)="turnOffCandidateNumberType()">
+          <i [class]="option.candidateNumberType ? 'common-icons radio-unselect-icon' : 'common-icons radio-select-icon'"></i>
+          <span> 条形码</span>
+        </li>
+        <li (click)="turnOnCandidateNumberType()">
+          <i [class]="option.candidateNumberType ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          <span> 准考证号</span>
+        </li>
+      </ul>
+    </section>
+    <section id="noAnswerAreaSetting">
+      <h3 class="sectionHeader">设置禁止作答区</h3>
+      <ul>
+        <li (click)="turnOnNoAnswerZone()">
+          <i [class]="option.noAnswerZone ? 'common-icons radio-select-icon' : 'common-icons radio-unselect-icon'"></i>
+          <span> 启用</span>
+        </li>
+        <li (click)="turnOffNoAnswerZone()">
+          <i [class]="option.noAnswerZone ? 'common-icons radio-unselect-icon' : 'common-icons radio-select-icon'"></i>
+          <span> 禁用</span>
+        </li>
+      </ul>
+    </section>
+    <section *ngIf="!isDownloadMode" id="addQuestion">
+      <h3 class="sectionHeader">添加试题</h3>
+      <div class="buttonContainer">
+        <button class="questionButton" (click)="showAddQuestionConfig(10001)">+选择题</button>
+        <button class="questionButton" (click)="showAddQuestionConfig(10005)">+填空题</button>
+        <button class="questionButton" (click)="showAddQuestionConfig(10007)">+解答题</button>
+        <button class="questionButton" (click)="showAddQuestionConfig(00000)">+作文</button>
+      </div>
+    </section>
+    <section>
+      <h3 class="sectionHeader">题目列表</h3>
+      <div class="questionList">
+        <table class="questionTable">
+          <tbody *ngIf="isDownloadMode; else makeBlock">
+            <tr *ngFor="let question of questions">
+              <th scope="row">{{showName(question)}}</th>
+              <td>{{showQuestionRange(question)}}</td>
+            </tr>
+          </tbody>
+          <ng-template #makeBlock>
+            <tbody>
+              <tr *ngFor="let question of addQuestions">
+                <th scope="row">{{question.name}}</th>
+                <td>{{showAddQuestionRange(question)}}</td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </section>
+    <!-- <section id="sortSetting">
+      <p class="sectionHeader">
+        <strong>按题号排序</strong>
+        <i class="common-icons as-toggle-off"></i>
+      </p>
+    </section> -->
+    <section id="footerSetting">
+      <p class="sectionHeader">
+        <strong>添加页脚</strong>
+        <i (click)="toggleFooter()"
+          [class]="isShowPageIndex ? 'common-icons as-toggle-on' : 'common-icons as-toggle-off'"></i>
+      </p>
+    </section>
+    <section id="judgementStyleSetting">
+      <p class="sectionHeader">
+        <strong>判断题样式 ( T F - √ X )</strong>
+        <i (click)="toggleJudgementType()"
+          [class]="option.judgementType ? 'common-icons as-toggle-off' : 'common-icons as-toggle-on'"></i>
+      </p>
+    </section>
+    <section id="buttons">
+      <div>
+        <button type="button" (click)="enterPreview()"><i class="common-icons as-preview"></i>&nbsp;&nbsp;预览</button>
+        <button type="button" *ngIf="modeCode !== '2'" (click)="saveAnswerSheet()"><i class="common-icons as-save"></i>&nbsp;&nbsp;保存</button>
+        <!-- <button type="button"><i class="common-icons as-lock"></i>&nbsp;&nbsp;锁定</button> -->
+      </div>
+    </section>
+    <footer class="editorFooter">
+      <button class="printButton" type="button" (click)="print()"><i class="common-icons as-print"></i>打印</button>
+      <button class="downloadButton" type="button" (click)="downLoad()"><i class="common-icons as-download"></i>下载</button>
+    </footer>
+  </aside>
+</div>

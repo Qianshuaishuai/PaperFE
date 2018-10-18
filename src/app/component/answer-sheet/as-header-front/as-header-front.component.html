@@ -1,0 +1,11 @@
+<!-- 答题卡标题正面 -->
+<div class="answerSheetHeader">
+  <textarea rows="2" wrap="hard"
+    title="标题字数不能超过两行"
+    spellcheck="false"
+    [(ngModel)]="title"
+    (focus)="onFocus($event)"
+    (blur)="onBlur($event)"
+    class="headerEditor">{{title}}</textarea>
+  <div data-html2canvas-ignore class="border"></div>
+</div>

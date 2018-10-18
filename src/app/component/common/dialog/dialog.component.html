@@ -1,0 +1,19 @@
+<div class="widget-overlay" [hidden]="isHidden">
+  <div class="background">
+  </div>
+  <div class="dialog-container">
+    <div class="dialog-head">
+      <span>温馨提示</span>
+      <img src="assets/imgs/close.png" (click)="close()"/>
+    </div>
+
+    <div class="dialog-content">
+        <span>{{message}}</span>
+    </div>
+
+    <div class="dialog-footer">
+      <button class="cancel" (click)="cancel()">取消</button>
+      <button class="sure" (click)="sure()">确定</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="question-base-div question-content-div">
+  <div class="question-blank-insert-div">
+    <button class="question-blank-insert" (click)="insertBlank()">插入答题线</button>
+  </div>
+  <label class="question-tip-content blank-question-content">题干
+    <!-- <span style="color: red;">*</span> -->
+  </label>
+  <div [id]="'edit-question-title-' + index"
+      class="question-content"
+      spellcheck="false"
+      contenteditable="true"
+      (keydown)="onKeyDown($event)"
+      (keyup)="onKeyUp($event)"
+      (paste)="onPaste($event)"
+  ></div>
+</div>
+<div [id]="'edit-question-answer-' + index" class="question-base-div question-answer-div">
+  <label class="question-tip-content">
+    <span [hidden]="question.type !== 10006">参考</span>答案
+    <!-- <span style="color: red;">*</span> -->
+  </label>
+  <!-- <label class="question-answer-tip" *ngIf="question.blank <= 0">请在题干中插入答题横线再编辑</label> -->
+  <div class="question-answer-item" *ngFor="let item of question.answer; let i = index; trackBy:getTrackBy;">
+    <span>{{ getItemPrefix(i) }}</span>
+    <div (focus)="openCKEditor($event, 'edit-question-answer-' + index + '-' + i)"
+      contenteditable="true"
+      class="option-text"
+      placeholder="请输入参考答案内容"
+      [id]="'edit-question-answer-' + index + '-' + i"
+      [innerHTML]="question.answer[i] | formatAnswer:question.type | safe:'html'"></div>
+    <!-- <img [src]="'/assets/image/question-item-remove.png'" (click)="removeItem(i)" /> -->
+    <i class="common-icons delete-option-icon delete-blank-option" (click)="removeItem(i)"></i>
+  </div>
+</div>

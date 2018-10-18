@@ -1,0 +1,73 @@
+<!-- 考生信息和注意事项准考证号版 -->
+<section class="studentInfoNumberVersion">
+  <!-- 基本信息 -->
+  <section class="basicInfoThreeCol" *ngIf="isThreeCol; else elseBlock" contenteditable spellcheck="false">
+    <!-- TODO 可调整长度 -->
+    <span>考场/座位号：</span>
+    <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+    <br>
+    <span>姓名：</span>
+    <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+    <br>
+    <span>班级：</span>
+    <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+  </section>
+  <ng-template #elseBlock>
+    <section class="basicInfo" contenteditable spellcheck="false">
+      <!-- TODO 可调整长度 -->
+      <span>姓名：</span>
+      <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+      <span>班级：</span>
+      <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+      <br>
+      <span>考场/座位号：</span>
+      <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
+    </section>
+  </ng-template>
+  <!-- 注意事项 -->
+  <section (focus)="onFocus($event)" (blur)="validateNotice($event)" class="attention" [class.attentionThreeCol]="isThreeCol" contenteditable spellcheck="false">
+    <div *ngIf="attention; else defaultAttention" [innerHTML]="attention | safe:'html'"></div>
+    <ng-template #defaultAttention>
+      <div>
+        <h4>注意事项</h4>
+        <p>
+          1. 答题前请将姓名、班级、考场、准考证号填写清楚。
+          <br>
+          2. 客观题答题，必须使用2B铅笔填涂，修改时用橡皮擦干净。
+          <br>
+          3. 主观题必须用黑色签字笔作答。
+          <br>
+          4. 必须在题号对应的答题区域内作答，超出答题区域书写无效。
+          <br>
+          5. 保持答卷清洁、完整。
+          <br>
+        </p>
+      </div>
+    </ng-template>
+  </section>
+  <!-- 相关标记 -->
+  <section class="mark" [class.markThreeCol]="isThreeCol">
+    <p>正确填涂</p>
+    <div><div class="correctMark"></div></div>
+    <p>缺考标记</p>
+    <div><div class="absenceMark"></div></div>
+  </section>
+  <!-- 准考证号 -->
+  <section class="candidateNumber" [class.candidateNumberThreeCol]="isThreeCol">
+    <table>
+      <thead>
+        <tr><th scope="col" colspan="8">准考证号</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="col" *ngFor="let column of columns"></th>
+        </tr>
+        <tr>
+          <td *ngFor="let column of columns">
+            <p *ngFor="let number of numbers">[<span>{{number}}</span>]</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

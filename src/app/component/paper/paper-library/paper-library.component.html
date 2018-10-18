@@ -1,0 +1,42 @@
+<header>
+  <div class="header">
+      <img class="logo" src="/assets/paper_logo.png" alt="试题库 Logo" />
+      <!-- <hr class="divider"/>
+      <span class="title">试卷库</span> -->
+      <!-- <span class="home-return" (click)="return()">返回</span> -->
+
+      <div class="search">
+        <app-search></app-search>
+
+        <button [ngStyle]="{'background': background, 'color': color}"(mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" (click)="clickSelectedResource()">已选资源（{{selectResourceCount}}）</button>
+
+        <div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()" class="selected-resource">
+          <div class="paper-count">
+            <span>已选试卷（{{selectResourceCount}}）份</span>
+          </div>
+          <div class="selected-resource-list">
+            <ul>
+              <li *ngFor="let resource of selectedResourceList; index as i">
+                <span class="serial">{{i+1}}</span>
+                <img class="icon" src="assets/imgs/icon_paper.png"/>
+                <span class="paper-title">{{resource.F_title}}</span>
+                <div class="fa fa-trash" (click)="cancelQuote(resource.F_resource_id)"></div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="complete">
+            <button (click)="complete()">完成</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+</header>
+<app-prompt-message></app-prompt-message>
+<app-menu></app-menu>
+<app-dialog></app-dialog>
+<article>
+  <app-selector></app-selector>
+  <router-outlet></router-outlet>
+</article>
